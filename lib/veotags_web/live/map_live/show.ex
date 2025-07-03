@@ -23,7 +23,7 @@ defmodule VeotagsWeb.MapLive.Show do
           <div :if={!@tag}>
             <div class="grid grid-cols-2 space-stretch mb-8">
               <div class="border-l-8 pl-4">
-                <div class="text-6xl"><%= @tag_count %></div>
+                <div class="text-6xl">{@tag_count}</div>
                 <div>VEOtags Spotted</div>
               </div>
               <div class="border-l-8 pl-4">
@@ -69,11 +69,19 @@ defmodule VeotagsWeb.MapLive.Show do
               <td>
                 <div>{coordinate(@tag)}</div>
                 <div class="flex gap-2">
-                  <.link href={"https://www.google.com/maps/search/?api=1&query=#{coordinate(@tag)}"} class="link link-primary flex items-center gap-1" target="_blank">
+                  <.link
+                    href={"https://www.google.com/maps/search/?api=1&query=#{coordinate(@tag)}"}
+                    class="link link-primary flex items-center gap-1"
+                    target="_blank"
+                  >
                     Google
                     <.icon name="hero-arrow-top-right-on-square" class="h-4 w-4 inline-block" />
                   </.link>
-                  <.link href={"https://www.openstreetmap.org/search?lat=#{@tag.latitude}&lon=#{@tag.longitude}&zoom=17"} class="link link-primary flex items-center gap-1" target="_blank">
+                  <.link
+                    href={"https://www.openstreetmap.org/search?lat=#{@tag.latitude}&lon=#{@tag.longitude}&zoom=17"}
+                    class="link link-primary flex items-center gap-1"
+                    target="_blank"
+                  >
                     OpenStreetMap
                     <.icon name="hero-arrow-top-right-on-square" class="h-4 w-4 inline-block" />
                   </.link>
@@ -82,7 +90,7 @@ defmodule VeotagsWeb.MapLive.Show do
             </tr>
             <tr :if={@tag.radius != 0}>
               <th>Precision</th>
-              <td>±{@tag.radius/1000}km</td>
+              <td>±{@tag.radius / 1000}km</td>
             </tr>
             <tr>
               <th>Submitted</th>

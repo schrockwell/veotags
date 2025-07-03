@@ -92,6 +92,7 @@ defmodule VeotagsWeb do
       # Common modules used in templates
       alias Phoenix.LiveView.JS
       alias VeotagsWeb.Layouts
+      alias VeotagsWeb.SVG
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())

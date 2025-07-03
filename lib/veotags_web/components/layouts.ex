@@ -33,8 +33,8 @@ defmodule VeotagsWeb.Layouts do
     ~H"""
     <header class="navbar px-4 sm:px-6 lg:px-8">
       <div class="flex-1">
-        <a href="/" class="flex-1 flex w-fit items-center gap-2">
-          <span class="text-2xl font-semibold">VEOtags</span>
+        <a href="/" class="flex-1 flex w-fit items-center gap-4 text-xl font-medium">
+          <SVG.veo />
         </a>
       </div>
       <div class="flex-none">

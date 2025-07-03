@@ -11,6 +11,7 @@ defmodule Veotags.Repo.Migrations.CreateTags do
       add :comment, :text
       add :approved_at, :utc_datetime
       add :photo, :string, null: false
+      add :reporter, :string
 
       timestamps(type: :utc_datetime)
     end
@@ -19,5 +20,6 @@ defmodule Veotags.Repo.Migrations.CreateTags do
     create index(:tags, :longitude)
     create index(:tags, :email)
     create index(:tags, :approved_at)
+    create index(:tags, :reporter)
   end
 end

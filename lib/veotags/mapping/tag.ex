@@ -5,13 +5,14 @@ defmodule Veotags.Mapping.Tag do
 
   schema "tags" do
     field :address, :string
+    field :approved_at, :utc_datetime
+    field :comment, :string
+    field :email, :string
     field :latitude, :float
     field :longitude, :float
-    field :radius, :integer, default: 0
-    field :email, :string
-    field :comment, :string
-    field :approved_at, :utc_datetime
     field :photo, Veotags.Photo.Type
+    field :radius, :integer, default: 0
+    field :reporter, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -19,7 +20,7 @@ defmodule Veotags.Mapping.Tag do
   @doc false
   def changeset(tag, attrs) do
     tag
-    |> cast(attrs, [:address, :latitude, :longitude, :radius, :email, :comment])
+    |> cast(attrs, [:address, :latitude, :longitude, :radius, :email, :comment, :reporter])
     |> cast_attachments(attrs, [:photo], allow_paths: true)
     |> validate_required([:address, :latitude, :longitude, :radius])
     |> validate_email()

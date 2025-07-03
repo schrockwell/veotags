@@ -25,13 +25,28 @@ export default {
     this.clusterGroup = L.markerClusterGroup();
     this.map.addLayer(this.clusterGroup);
 
-    this.handleEvent("add_markers", ({ markers }) => {
+    this.handleEvent("put_markers", ({ markers }) => {
+      this.clusterGroup.clearLayers();
+
       markers.forEach((marker) => {
         this.clusterGroup.addLayer(
-          L.marker([marker.lat, marker.lng], { icon: this.icon }).bindPopup(
-            marker.popup
-          )
+          L.marker([marker.lat, marker.lng], { icon: this.icon })
+            .bindPopup(marker.address)
+            .on("popupopen", () => {
+              this.pushEvent("marker_selected", { id: marker.id });
+            })
+            .on("popupclose", () => {
+              this.pushEvent("marker_deselected", { id: marker.id });
+            })
         );
+      });
+    });
+
+    this.handleEvent("close_popups", () => {
+      this.clusterGroup.eachLayer((layer) => {
+        if (layer.getPopup()) {
+          layer.closePopup();
+        }
       });
     });
   },

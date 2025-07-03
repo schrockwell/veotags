@@ -22,12 +22,7 @@ defmodule VeotagsWeb.TagLive.Index do
         row_click={fn {_id, tag} -> JS.navigate(~p"/tags/#{tag}") end}
       >
         <:col :let={{_id, tag}} label="Address">{tag.address}</:col>
-        <:col :let={{_id, tag}} label="Latitude">{tag.latitude}</:col>
-        <:col :let={{_id, tag}} label="Longitude">{tag.longitude}</:col>
-        <:col :let={{_id, tag}} label="Radius">{tag.radius}</:col>
-        <:col :let={{_id, tag}} label="Email">{tag.email}</:col>
-        <:col :let={{_id, tag}} label="Comment">{tag.comment}</:col>
-        <:col :let={{_id, tag}} label="Approved at">{tag.approved_at}</:col>
+        <:col :let={{_id, tag}} label="Approved">{tag.approved_at != nil}</:col>
         <:action :let={{_id, tag}}>
           <div class="sr-only">
             <.link navigate={~p"/tags/#{tag}"}>Show</.link>

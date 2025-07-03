@@ -7,6 +7,7 @@ defmodule VeotagsWeb.MapLive.Show do
     socket =
       socket
       |> assign(:tag, nil)
+      |> assign(:tag_count, Mapping.count_tags())
       |> push_markers()
 
     {:ok, socket}
@@ -20,6 +21,17 @@ defmodule VeotagsWeb.MapLive.Show do
           <.tag_details :if={@tag} tag={@tag} />
 
           <div :if={!@tag}>
+            <div class="grid grid-cols-2 space-stretch mb-8">
+              <div class="border-l-8 pl-4">
+                <div class="text-6xl"><%= @tag_count %></div>
+                <div>VEOtags Spotted</div>
+              </div>
+              <div class="border-l-8 pl-4">
+                <div class="text-6xl">123</div>
+                <div>Some Other Metric</div>
+              </div>
+            </div>
+
             <p class="text-sm text-gray-500">Select a tag to see details</p>
           </div>
         </div>

@@ -2,6 +2,7 @@ defmodule Veotags.Mapping.Tag do
   use Ecto.Schema
   use Waffle.Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   schema "tags" do
     field :address, :string
@@ -33,7 +34,7 @@ defmodule Veotags.Mapping.Tag do
   end
 
   def approve_changeset(tag) do
-    change(tag, approved_at: DateTime.utc_now())
+    change(tag, approved_at: DateTime.utc_now() |> DateTime.truncate(:second))
   end
 
   defp validate_email(changeset) do
@@ -43,4 +44,6 @@ defmodule Veotags.Mapping.Tag do
       changeset
     end
   end
+
+  def approved(query), do: where(query, [t], not is_nil(t.approved_at))
 end

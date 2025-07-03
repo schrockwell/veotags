@@ -109,4 +109,14 @@ defmodule Veotags.Mapping do
   def change_tag(%Tag{} = tag, attrs \\ %{}) do
     Tag.changeset(tag, attrs)
   end
+
+  def count_tags do
+    Tag |> Tag.approved() |> Repo.aggregate(:count, :id)
+  end
+
+  def approve_tag(%Tag{} = tag) do
+    tag
+    |> Tag.approve_changeset()
+    |> Repo.update()
+  end
 end

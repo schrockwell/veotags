@@ -28,6 +28,9 @@ defmodule VeotagsWeb.TagLive.Show do
         <:item title="Email">{@tag.email}</:item>
         <:item title="Comment">{@tag.comment}</:item>
         <:item title="Approved at">{@tag.approved_at}</:item>
+        <:item title="Photo">
+          <img src={Veotags.Photo.presigned_url(@tag.photo)} />
+        </:item>
       </.list>
     </Layouts.app>
     """

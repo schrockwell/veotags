@@ -1,0 +1,7 @@
+export AWS_REGION="nyc3"
+export AWS_ACCESS_KEY_ID="DO..."
+export AWS_SECRET_ACCESS_KEY="..."
+export AWS_HOST="${AWS_REGION}.digitaloceanspaces.com"
+
+export S3_BUCKET="my-bucket"
+export S3_ASSET_HOST="https://${S3_BUCKET}.${AWS_REGION}.cdn.digitaloceanspaces.com"

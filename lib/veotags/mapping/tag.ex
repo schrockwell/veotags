@@ -1,5 +1,6 @@
 defmodule Veotags.Mapping.Tag do
   use Ecto.Schema
+  use Waffle.Ecto.Schema
   import Ecto.Changeset
 
   schema "tags" do
@@ -10,6 +11,7 @@ defmodule Veotags.Mapping.Tag do
     field :email, :string
     field :comment, :string
     field :approved_at, :utc_datetime
+    field :photo, Veotags.Photo.Type
 
     timestamps(type: :utc_datetime)
   end
@@ -18,6 +20,7 @@ defmodule Veotags.Mapping.Tag do
   def changeset(tag, attrs) do
     tag
     |> cast(attrs, [:address, :latitude, :longitude, :radius, :email, :comment])
+    |> cast_attachments(attrs, [:photo], allow_paths: true)
     |> validate_required([:address, :latitude, :longitude, :radius])
     |> validate_email()
     |> validate_number(:latitude, greater_than: -90, less_than: 90)

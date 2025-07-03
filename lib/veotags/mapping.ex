@@ -5,6 +5,7 @@ defmodule Veotags.Mapping do
 
   import Ecto.Query, warn: false
   alias Veotags.Repo
+  alias Veotags.Photo
 
   alias Veotags.Mapping.Tag
 
@@ -86,7 +87,14 @@ defmodule Veotags.Mapping do
 
   """
   def delete_tag(%Tag{} = tag) do
-    Repo.delete(tag)
+    case Repo.delete(tag) do
+      {:ok, tag} ->
+        Photo.delete(tag.photo.file_name)
+        {:ok, tag}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """

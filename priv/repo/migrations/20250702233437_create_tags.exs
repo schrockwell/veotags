@@ -10,6 +10,7 @@ defmodule Veotags.Repo.Migrations.CreateTags do
       add :email, :string
       add :comment, :text
       add :approved_at, :utc_datetime
+      add :photo, :string, null: false
 
       timestamps(type: :utc_datetime)
     end

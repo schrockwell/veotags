@@ -14,13 +14,14 @@ defmodule VeotagsWeb.TagLive.Form do
       </.header>
 
       <.form for={@form} id="tag-form" phx-change="validate" phx-submit="save">
-        <.input field={@form[:address]} type="text" label="Address" />
-        <.input field={@form[:latitude]} type="number" label="Latitude" step="any" />
-        <.input field={@form[:longitude]} type="number" label="Longitude" step="any" />
-        <.input field={@form[:radius]} type="number" label="Radius" />
+        <.input field={@form[:address]} type="text" label="Address" required="true" />
+        <.input field={@form[:latitude]} type="number" label="Latitude" step="any" required="true" />
+        <.input field={@form[:longitude]} type="number" label="Longitude" step="any" required="true" />
+        <.input field={@form[:radius]} type="number" label="Radius" required="true" />
         <.input field={@form[:email]} type="text" label="Email" />
         <.input field={@form[:comment]} type="textarea" label="Comment" />
         <.input field={@form[:approved_at]} type="datetime-local" label="Approved at" />
+        <.live_file_input upload={@uploads[:photo]} required="true" />
         <footer>
           <.button phx-disable-with="Saving..." variant="primary">Save Tag</.button>
           <.button navigate={return_path(@return_to, @tag)}>Cancel</.button>
@@ -35,7 +36,8 @@ defmodule VeotagsWeb.TagLive.Form do
     {:ok,
      socket
      |> assign(:return_to, return_to(params["return_to"]))
-     |> apply_action(socket.assigns.live_action, params)}
+     |> apply_action(socket.assigns.live_action, params)
+     |> allow_upload(:photo, accept: Veotags.Photo.allowed_extensions())}
   end
 
   defp return_to("show"), do: "show"
@@ -66,6 +68,16 @@ defmodule VeotagsWeb.TagLive.Form do
   end
 
   def handle_event("save", %{"tag" => tag_params}, socket) do
+    [file_path] =
+      consume_uploaded_entries(socket, :photo, fn %{path: path}, entry ->
+        # Add the file extension to the temp file
+        path_with_extension = path <> String.replace(entry.client_type, "image/", ".")
+        File.cp!(path, path_with_extension)
+        {:ok, path_with_extension}
+      end)
+
+    tag_params = Map.put(tag_params, "photo", file_path)
+
     save_tag(socket, socket.assigns.live_action, tag_params)
   end
 

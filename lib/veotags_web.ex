@@ -84,6 +84,8 @@ defmodule VeotagsWeb do
 
       # HTML escaping functionality
       import Phoenix.HTML
+      use PhoenixHTMLHelpers
+
       # Core UI components
       import VeotagsWeb.CoreComponents
 

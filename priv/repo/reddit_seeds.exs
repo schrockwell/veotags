@@ -9,6 +9,7 @@ alias Veotags.Mapping
   longitude: -72.674264,
   radius: 0,
   photo: "https://i.redd.it/zacuftbmgiaf1.jpeg",
+  reporter: "u/Immoracle"
 })
 
 {:ok, _} = Mapping.create_tag(%{
@@ -17,6 +18,7 @@ alias Veotags.Mapping
   longitude: -83.5895818,
   radius: 10_000,
   photo: "https://i.redd.it/4stbqf8b3daf1.jpeg",
+  reporter: "u/FlightOfBrian"
 })
 
 {:ok, _} = Mapping.create_tag(%{
@@ -25,6 +27,7 @@ alias Veotags.Mapping
   longitude: -72.7225853,
   radius: 0,
   photo: "https://i.redd.it/8d68wto5kx9f1.jpeg",
+  reporter: "u/Alkali13"
 })
 
 {:ok, _} = Mapping.create_tag(%{
@@ -33,4 +36,5 @@ alias Veotags.Mapping
   longitude: -73.630862,
   radius: 0,
   photo: "https://i.redd.it/1qt18q98h4te1.jpeg",
+  reporter: "u/schrockwell"
 })

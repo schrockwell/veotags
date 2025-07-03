@@ -1,6 +1,9 @@
 /* See the Tailwind configuration guide for advanced usage
    https://tailwindcss.com/docs/configuration */
 
+@import "leaflet";
+@import "../node_modules/leaflet.markercluster/dist/MarkerCluster.css";
+@import "../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css";
 @import "tailwindcss" source(none);
 @source "../css";
 @source "../js";
@@ -97,6 +100,8 @@
 @custom-variant phx-change-loading (.phx-change-loading&, .phx-change-loading &);
 
 /* Make LiveView wrapper divs transparent for layout */
-[data-phx-session] { display: contents }
+[data-phx-session] {
+  display: contents;
+}
 
 /* This file is for your main application CSS */

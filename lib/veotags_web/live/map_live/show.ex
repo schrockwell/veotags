@@ -35,14 +35,15 @@ defmodule VeotagsWeb.MapLive.Show do
   defp tag_details(assigns) do
     ~H"""
     <div class="flex flex-col gap-8">
-      <button phx-click="clear_tag" class="btn btn-secondary">
-        <.icon name="hero-x-mark" />
-        Close
-      </button>
+      <div class="flex justify-between items-start">
+        <h3 class="text-xl font-medium mt-2">{@tag.address}</h3>
 
-      <h3 class="text-xl font-medium">{@tag.address}</h3>
+        <button phx-click="clear_tag" class="btn btn-circle btn-neutral btn-lg">
+          <.icon name="hero-x-mark" class="w-6 h-6" />
+        </button>
+      </div>
 
-      <img src={Veotags.Photo.presigned_url(@tag.photo)} class="w-full" />
+      <img src={Veotags.Photo.presigned_url(@tag.photo)} class="w-full rounded-box" />
 
       <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
         <table class="table">

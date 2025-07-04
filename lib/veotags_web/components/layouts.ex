@@ -33,9 +33,9 @@ defmodule VeotagsWeb.Layouts do
     ~H"""
     <header class="navbar px-4 sm:px-6 lg:px-8">
       <div class="flex-1">
-        <a href="/" class="flex-1 flex w-fit items-center gap-4 text-xl font-medium">
+        <.link navigate={~p"/"} class="flex-1 flex w-fit items-center gap-4 text-xl font-medium">
           <SVG.veo />
-        </a>
+        </.link>
       </div>
       <div class="flex-none">
         <ul class="flex flex-column px-1 space-x-4 items-center">

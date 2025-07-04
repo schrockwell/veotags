@@ -24,21 +24,25 @@ export default {
 
     this.clusterGroup = L.markerClusterGroup();
     this.map.addLayer(this.clusterGroup);
+    this.markers = {};
 
     this.handleEvent("put_markers", ({ markers }) => {
       this.clusterGroup.clearLayers();
+      this.markers = {};
 
       markers.forEach((marker) => {
-        this.clusterGroup.addLayer(
-          L.marker([marker.lat, marker.lng], { icon: this.icon })
-            .bindPopup(marker.address)
-            .on("popupopen", () => {
-              this.pushEvent("marker_selected", { id: marker.id });
-            })
-            .on("popupclose", () => {
-              this.pushEvent("marker_deselected", { id: marker.id });
-            })
-        );
+        this.markers[marker.id] = L.marker([marker.lat, marker.lng], {
+          icon: this.icon,
+        })
+          .bindPopup(marker.address)
+          .on("popupopen", () => {
+            this.pushEvent("marker_selected", { id: marker.id });
+          })
+          .on("popupclose", () => {
+            this.pushEvent("marker_deselected", { id: marker.id });
+          });
+
+        this.clusterGroup.addLayer(this.markers[marker.id]);
       });
     });
 
@@ -48,6 +52,13 @@ export default {
           layer.closePopup();
         }
       });
+    });
+
+    this.handleEvent("select_marker", ({ marker_id }) => {
+      if (this.markers[marker_id]) {
+        this.map.setView(this.markers[marker_id].getLatLng(), 14);
+        this.markers[marker_id].openPopup();
+      }
     });
   },
 

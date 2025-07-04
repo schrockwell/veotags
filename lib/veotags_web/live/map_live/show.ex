@@ -8,6 +8,7 @@ defmodule VeotagsWeb.MapLive.Show do
       socket
       |> assign(:tag, nil)
       |> assign(:tag_count, Mapping.count_tags())
+      |> assign(:recent_tags, Mapping.list_recent_tags(limit: 10))
       |> push_markers()
 
     {:ok, socket}
@@ -21,18 +22,11 @@ defmodule VeotagsWeb.MapLive.Show do
           <.tag_details :if={@tag} tag={@tag} />
 
           <div :if={!@tag}>
-            <div class="grid grid-cols-2 space-stretch mb-8">
-              <div class="border-l-8 pl-4">
-                <div class="text-6xl">{@tag_count}</div>
-                <div>VEOtags Spotted</div>
-              </div>
-              <div class="border-l-8 pl-4">
-                <div class="text-6xl">123</div>
-                <div>Some Other Metric</div>
-              </div>
-            </div>
+            <h3 class="text-2xl font-medium mb-6">Recent VEOtags</h3>
 
-            <p class="text-sm text-gray-500">Select a tag to see details</p>
+            <div class="grid grid-cols-2 xl:grid-cols-3 gap-5">
+              <.tag_card :for={tag <- @recent_tags} tag={tag} />
+            </div>
           </div>
         </div>
 
@@ -44,7 +38,23 @@ defmodule VeotagsWeb.MapLive.Show do
     """
   end
 
+  defp tag_card(assigns) do
+    ~H"""
+    <button
+      class="transition-transform hover:scale-105 cursor-pointer"
+      phx-click="preview_selected"
+      phx-value-id={@tag.id}
+    >
+      <figure>
+        <img src={Veotags.Photo.presigned_url(@tag.photo)} class="aspect-square rounded-lg" />
+      </figure>
+    </button>
+    """
+  end
+
   defp tag_details(assigns) do
+    assigns = Map.put(assigns, :photo_url, Veotags.Photo.presigned_url(assigns.tag.photo))
+
     ~H"""
     <div class="flex flex-col gap-8">
       <div class="flex justify-between items-start">
@@ -55,14 +65,23 @@ defmodule VeotagsWeb.MapLive.Show do
         </button>
       </div>
 
-      <img src={Veotags.Photo.presigned_url(@tag.photo)} class="w-full rounded-box" />
+      <.link href={@photo_url} target="_blank">
+        <img src={@photo_url} class="w-full rounded-box" />
+      </.link>
 
       <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
         <table class="table">
           <tbody>
             <tr :if={@tag.reporter}>
-              <th>Spotted By</th>
-              <td>{@tag.reporter}</td>
+              <th>Source</th>
+              <td>
+                {@tag.reporter}
+                <div :if={@tag.source_url}>
+                  <.link href={@tag.source_url} target="_blank" class="link link-primary">
+                    {URI.parse(@tag.source_url).host}
+                  </.link>
+                </div>
+              </td>
             </tr>
             <tr>
               <th>Location</th>
@@ -111,7 +130,7 @@ defmodule VeotagsWeb.MapLive.Show do
   defp coordinate(tag), do: "#{latitude(tag.latitude)}, #{longitude(tag.longitude)}"
 
   defp latitude(lat) when lat < 0, do: "#{abs(lat)}° S"
-  defp latitude(lat), do: "#{lat}°N"
+  defp latitude(lat), do: "#{lat}° N"
 
   defp longitude(lng) when lng < 0, do: "#{abs(lng)}° W"
   defp longitude(lng), do: "#{lng}° E"
@@ -137,7 +156,16 @@ defmodule VeotagsWeb.MapLive.Show do
   end
 
   def handle_event("marker_selected", %{"id" => id}, socket) do
-    {:noreply, assign(socket, :tag, Mapping.get_tag!(id))}
+    {:noreply,
+     socket
+     |> assign(:tag, Mapping.get_tag!(id))}
+  end
+
+  def handle_event("preview_selected", %{"id" => id}, socket) do
+    {:noreply,
+     socket
+     |> push_event("select_marker", %{id: "map", marker_id: id})
+     |> assign(:tag, Mapping.get_tag!(id))}
   end
 
   def handle_event("marker_deselected", _params, socket) do

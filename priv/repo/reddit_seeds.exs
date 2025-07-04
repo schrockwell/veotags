@@ -11,6 +11,7 @@ tags_params = [
     radius: 0,
     photo: "https://i.redd.it/zacuftbmgiaf1.jpeg",
     reporter: "u/Immoracle",
+    source_url: "https://www.reddit.com/r/veotags/comments/1lq4oda/veo_hartford/"
   },
   %{
     address: "Toledo, Ohio",
@@ -19,6 +20,7 @@ tags_params = [
     radius: 10_000,
     photo: "https://i.redd.it/4stbqf8b3daf1.jpeg",
     reporter: "u/FlightOfBrian",
+    source_url: "https://www.reddit.com/r/veotags/comments/1lpizqs/spotted_in_central_ohio_in_2021/"
   },
   %{
     address: "Oakwood Ave & Park Rd, West Hartford, CT",
@@ -27,6 +29,7 @@ tags_params = [
     radius: 0,
     photo: "https://i.redd.it/8d68wto5kx9f1.jpeg",
     reporter: "u/Alkali13",
+    source_url: "https://www.reddit.com/r/veotags/comments/1lnpfs7/corner_of_oakwood_and_park_in_weha_ct/"
   },
   %{
     address: "Brewster, NY Rest Area",
@@ -35,6 +38,7 @@ tags_params = [
     radius: 0,
     photo: "https://i.redd.it/1qt18q98h4te1.jpeg",
     reporter: "u/schrockwell",
+    source_url: "https://www.reddit.com/r/veotags/comments/1lq4oda/veo_hartford/"
   },
 ]
 

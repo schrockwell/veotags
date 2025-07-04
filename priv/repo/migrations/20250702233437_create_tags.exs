@@ -12,6 +12,7 @@ defmodule Veotags.Repo.Migrations.CreateTags do
       add :approved_at, :utc_datetime
       add :photo, :string, null: false
       add :reporter, :string
+      add :source_url, :string
 
       timestamps(type: :utc_datetime)
     end

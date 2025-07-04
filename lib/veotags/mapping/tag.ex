@@ -14,6 +14,7 @@ defmodule Veotags.Mapping.Tag do
     field :photo, Veotags.Photo.Type
     field :radius, :integer, default: 0
     field :reporter, :string
+    field :source_url, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -21,7 +22,16 @@ defmodule Veotags.Mapping.Tag do
   @doc false
   def changeset(tag, attrs) do
     tag
-    |> cast(attrs, [:address, :latitude, :longitude, :radius, :email, :comment, :reporter])
+    |> cast(attrs, [
+      :address,
+      :latitude,
+      :longitude,
+      :radius,
+      :email,
+      :comment,
+      :reporter,
+      :source_url
+    ])
     |> cast_attachments(attrs, [:photo], allow_paths: true)
     |> validate_required([:address, :latitude, :longitude, :radius])
     |> validate_email()
@@ -45,5 +55,13 @@ defmodule Veotags.Mapping.Tag do
     end
   end
 
-  def approved(query), do: where(query, [t], not is_nil(t.approved_at))
+  def approved(query) do
+    where(query, [t], not is_nil(t.approved_at))
+  end
+
+  def recent(query, limit \\ 10) do
+    query
+    |> order_by(desc: :inserted_at)
+    |> limit(^limit)
+  end
 end

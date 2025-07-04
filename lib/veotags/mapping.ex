@@ -119,4 +119,11 @@ defmodule Veotags.Mapping do
     |> Tag.approve_changeset()
     |> Repo.update()
   end
+
+  def list_recent_tags(opts \\ []) do
+    Tag
+    |> Tag.approved()
+    |> Tag.recent(opts[:limit] || 10)
+    |> Repo.all()
+  end
 end

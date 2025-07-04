@@ -24,6 +24,7 @@ import { Socket } from "phoenix";
 import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import MapHook from "./map_hook";
+import MapPickerHook from "./map_picker_hook";
 
 const csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -31,7 +32,7 @@ const csrfToken = document
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: { _csrf_token: csrfToken },
-  hooks: { MapHook },
+  hooks: { MapHook, MapPickerHook },
 });
 
 // Show progress bar on live navigation and form submits

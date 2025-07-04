@@ -17,7 +17,8 @@ defmodule VeotagsWeb.Router do
   scope "/", VeotagsWeb do
     pipe_through :browser
 
-    live "/", MapLive.Show
+    live "/", MapLive.Show, :show
+    live "/submit", SubmitLive.Form, :new
 
     live "/tags", TagLive.Index, :index
     live "/tags/new", TagLive.Form, :new

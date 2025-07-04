@@ -43,7 +43,7 @@ defmodule VeotagsWeb.Layouts do
             <.theme_toggle />
           </li>
           <li>
-            <a href="#todo" class="btn btn-primary">
+            <a href={~p"/submit"} class="btn btn-primary">
               Submit a Tag
             </a>
           </li>

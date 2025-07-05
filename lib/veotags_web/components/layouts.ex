@@ -31,6 +31,30 @@ defmodule VeotagsWeb.Layouts do
 
   def app(assigns) do
     ~H"""
+    <.navbar />
+
+    {render_slot(@inner_block)}
+
+    <.flash_group flash={@flash} />
+    """
+  end
+
+  def map(assigns) do
+    ~H"""
+    <div class="h-screen flex flex-col overflow-hidden">
+      <.navbar />
+
+      <div class="flex flex-1 overflow-hidden">
+        {render_slot(@inner_block)}
+      </div>
+    </div>
+
+    <.flash_group flash={@flash} />
+    """
+  end
+
+  defp navbar(assigns) do
+    ~H"""
     <header class="navbar px-4 sm:px-6 lg:px-8">
       <div class="flex-1">
         <.link navigate={~p"/"} class="flex-1 flex w-fit items-center gap-4 text-xl font-medium">
@@ -50,22 +74,6 @@ defmodule VeotagsWeb.Layouts do
         </ul>
       </div>
     </header>
-
-    <main class="flex-1 flex flex-col">
-      {render_slot(@inner_block)}
-    </main>
-
-    <.flash_group flash={@flash} />
-    """
-  end
-
-  def content(assigns) do
-    ~H"""
-    <div class="px-4 py-20 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-2xl space-y-4">
-        {render_slot(@inner_block)}
-      </div>
-    </div>
     """
   end
 

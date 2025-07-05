@@ -16,25 +16,25 @@ defmodule VeotagsWeb.MapLive.Show do
 
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash}>
-      <div class="flex-1 flex items-stretch">
-        <div class={"lg:w-1/3 bg-base-200 p-4 overflow-y-scroll #{sidebar_column_class(@tag)}"}>
-          <.tag_details :if={@tag} tag={@tag} />
+    <Layouts.map flash={@flash}>
+      <!-- Sidebar -->
+      <aside class={"lg:w-1/3 bg-base-200 p-4 overflow-y-auto #{sidebar_column_class(@tag)}"}>
+        <.tag_details :if={@tag} tag={@tag} />
 
-          <div :if={!@tag}>
-            <h3 class="text-2xl font-medium mb-6">Recent VEOtags</h3>
+        <div :if={!@tag}>
+          <h3 class="text-2xl font-medium mb-6">Recent VEOtags</h3>
 
-            <div class="grid grid-cols-2 xl:grid-cols-3 gap-5">
-              <.tag_card :for={tag <- @recent_tags} tag={tag} />
-            </div>
+          <div class="grid grid-cols-2 xl:grid-cols-3 gap-5">
+            <.tag_card :for={tag <- @recent_tags} tag={tag} />
           </div>
         </div>
-
-        <div class={"relative #{map_column_class(@tag)}"}>
-          <div id="map" phx-hook="MapHook" phx-update="ignore" class="absolute inset-0" />
-        </div>
+      </aside>
+      
+    <!-- Map area -->
+      <div class={"relative #{map_column_class(@tag)}"}>
+        <div id="map" phx-hook="MapHook" phx-update="ignore" class="absolute inset-0" />
       </div>
-    </Layouts.app>
+    </Layouts.map>
     """
   end
 

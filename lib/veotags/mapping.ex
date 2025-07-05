@@ -9,6 +9,8 @@ defmodule Veotags.Mapping do
 
   alias Veotags.Mapping.Tag
 
+  require Logger
+
   @doc """
   Returns the list of tags.
 
@@ -125,5 +127,30 @@ defmodule Veotags.Mapping do
     |> Tag.approved()
     |> Tag.recent(opts[:limit] || 10)
     |> Repo.all()
+  end
+
+  def photo_url(%Tag{} = tag) do
+    if tag.photo_url == nil or
+         tag.photo_url_expires_at == nil or
+         DateTime.compare(tag.photo_url_expires_at, DateTime.utc_now()) == :lt do
+      update_photo_url(tag)
+    else
+      tag.photo_url
+    end
+  end
+
+  defp update_photo_url(%Tag{} = tag) do
+    Logger.debug("Generating presigned URL for tag #{tag.id}")
+
+    case Photo.presigned_url(tag.photo) do
+      {:ok, url, expires_at} ->
+        tag
+        |> Ecto.Changeset.change(photo_url: url, photo_url_expires_at: expires_at)
+        |> Repo.update!()
+        |> Map.get(:photo_url)
+
+      _ ->
+        nil
+    end
   end
 end

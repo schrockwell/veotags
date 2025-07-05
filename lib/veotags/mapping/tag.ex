@@ -15,6 +15,8 @@ defmodule Veotags.Mapping.Tag do
     field :radius, :integer, default: 0
     field :reporter, :string
     field :source_url, :string
+    field :photo_url, :string
+    field :photo_url_expires_at, :utc_datetime
 
     timestamps(type: :utc_datetime)
   end

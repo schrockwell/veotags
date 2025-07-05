@@ -21,7 +21,7 @@ defmodule Veotags.Geocoding do
   def reverse_geocode(lat, lng) when is_number(lat) and is_number(lng) do
     api_key = System.fetch_env!("GEOCODING_API_KEY")
 
-    url = "https://geocode.maps.co/reverse?lat=#{lat}&lon=#{lng}&api_key=#{api_key}"
+    _url = "https://geocode.maps.co/reverse?lat=#{lat}&lon=#{lng}&api_key=#{api_key}"
     # TODO
   end
 end

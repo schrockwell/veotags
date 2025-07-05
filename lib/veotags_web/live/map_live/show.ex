@@ -46,17 +46,14 @@ defmodule VeotagsWeb.MapLive.Show do
       phx-value-id={@tag.id}
     >
       <figure>
-        <img
-          src={Veotags.Photo.presigned_url(@tag.photo)}
-          class="aspect-square object-cover rounded-lg"
-        />
+        <img src={Mapping.photo_url(@tag)} class="aspect-square object-cover rounded-lg" />
       </figure>
     </button>
     """
   end
 
   defp tag_details(assigns) do
-    assigns = Map.put(assigns, :photo_url, Veotags.Photo.presigned_url(assigns.tag.photo))
+    assigns = Map.put(assigns, :photo_url, Mapping.photo_url(assigns.tag))
 
     ~H"""
     <div class="flex flex-col gap-8">

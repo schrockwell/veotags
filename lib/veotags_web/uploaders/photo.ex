@@ -30,15 +30,25 @@ defmodule Veotags.Photo do
     ~w(.jpg .jpeg .png)
   end
 
+  @seven_days 60 * 60 * 24 * 7
+
   def presigned_url(photo) do
     bucket = System.fetch_env!("S3_BUCKET")
 
     :s3
     |> ExAws.Config.new([])
-    |> ExAws.S3.presigned_url(:get, bucket, Path.join("uploads", photo.file_name), [])
+    |> ExAws.S3.presigned_url(:get, bucket, Path.join("uploads", photo.file_name),
+      expires_in: @seven_days
+    )
     |> case do
-      {:ok, url} -> url
-      _ -> "/images/placeholder.png"
+      {:ok, url} ->
+        expires_at =
+          DateTime.utc_now() |> DateTime.add(@seven_days, :second) |> DateTime.truncate(:second)
+
+        {:ok, url, expires_at}
+
+      _ ->
+        :error
     end
   end
 

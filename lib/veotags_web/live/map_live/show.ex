@@ -46,7 +46,10 @@ defmodule VeotagsWeb.MapLive.Show do
       phx-value-id={@tag.id}
     >
       <figure>
-        <img src={Veotags.Photo.presigned_url(@tag.photo)} class="aspect-square rounded-lg" />
+        <img
+          src={Veotags.Photo.presigned_url(@tag.photo)}
+          class="aspect-square object-cover rounded-lg"
+        />
       </figure>
     </button>
     """

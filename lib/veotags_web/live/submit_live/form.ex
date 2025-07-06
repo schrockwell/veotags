@@ -113,7 +113,7 @@ defmodule VeotagsWeb.SubmitLive.Form do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:page_title, "Submit a VEOtag")
+     |> assign(:page_title, "Submit")
      |> assign(:step, 1)
      |> assign(:tag, %Tag{})
      |> assign(:form, to_form(Mapping.change_tag(%Tag{})))

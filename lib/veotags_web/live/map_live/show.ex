@@ -24,14 +24,18 @@ defmodule VeotagsWeb.MapLive.Show do
         push_event(socket, "deselect_marker", %{id: "map"})
       end
 
-    {:noreply, assign(socket, :tag, tag)}
+    {:noreply,
+     socket
+     |> assign(:tag, tag)
+     |> assign(:page_title, "##{tag.number}")}
   end
 
   def handle_params(_params, _uri, socket) do
     {:noreply,
      socket
      |> assign(:tag, nil)
-     |> push_event("deselect_marker", %{id: "map"})}
+     |> push_event("deselect_marker", %{id: "map"})
+     |> assign(:page_title, "Map")}
   end
 
   def render(assigns) do

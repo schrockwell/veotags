@@ -29,14 +29,14 @@ export default {
       this.pushEventTo(target, "map_clicked", { lat, lng });
     });
 
-    this._updateMarker();
+    this._updateMarker({ focus: true });
   },
 
   updated() {
     this._updateMarker();
   },
 
-  _updateMarker() {
+  _updateMarker(opts = {}) {
     if (this.el.dataset.lat && this.el.dataset.lng) {
       const lat = parseFloat(this.el.dataset.lat);
       const lng = parseFloat(this.el.dataset.lng);
@@ -48,7 +48,9 @@ export default {
       }
 
       this.marker.setLatLng([lat, lng]);
-      // this.map.setView([lat, lng]);
+      if (opts.focus) {
+        this.map.setView([lat, lng], 15);
+      }
     } else {
       if (this.marker) {
         this.map.removeLayer(this.marker);

@@ -41,7 +41,7 @@ defmodule VeotagsWeb.SubmitLive.MapPicker do
 
   def render(assigns) do
     ~H"""
-    <div class={disabled_class(@disabled)}>
+    <div class={[disabled_class(@disabled), "rounded-box overflow-hidden"]}>
       <input type="hidden" name={@lat_field.name} value={@lat_field.value} />
       <input type="hidden" name={@lng_field.name} value={@lng_field.value} />
 

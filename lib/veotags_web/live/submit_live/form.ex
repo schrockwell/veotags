@@ -72,7 +72,7 @@ defmodule VeotagsWeb.SubmitLive.Form do
                 </.error>
               </fieldset>
 
-              <h3 class="text-xl mb-2">Details</h3>
+              <h3 class="text-xl mb-2">Reporter</h3>
 
               <.input
                 field={@form[:reporter]}

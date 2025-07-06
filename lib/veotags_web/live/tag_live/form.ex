@@ -4,29 +4,47 @@ defmodule VeotagsWeb.TagLive.Form do
   alias Veotags.Mapping
   alias Veotags.Mapping.Tag
 
+  alias VeotagsWeb.SubmitLive.MapPicker
+
   @impl true
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash}>
-      <.header>
-        {@page_title}
-        <:subtitle>Use this form to manage tag records in your database.</:subtitle>
-      </.header>
+      <.container>
+        <img src={Mapping.photo_url(@tag)} alt="Tag Photo" class="rounded-box max-h-[500px] mx-auto" />
 
-      <.form for={@form} id="tag-form" phx-change="validate" phx-submit="save">
-        <.input field={@form[:address]} type="text" label="Address" required="true" />
-        <.input field={@form[:latitude]} type="number" label="Latitude" step="any" required="true" />
-        <.input field={@form[:longitude]} type="number" label="Longitude" step="any" required="true" />
-        <.input field={@form[:radius]} type="number" label="Radius" required="true" />
-        <.input field={@form[:email]} type="text" label="Email" />
-        <.input field={@form[:comment]} type="textarea" label="Comment" />
-        <.input field={@form[:approved_at]} type="datetime-local" label="Approved at" />
-        <.live_file_input upload={@uploads[:photo]} required="true" />
-        <footer>
-          <.button phx-disable-with="Saving..." variant="primary">Save Tag</.button>
-          <.button navigate={return_path(@return_to, @tag)}>Cancel</.button>
-        </footer>
-      </.form>
+        <.form for={@form} id="tag-form" phx-change="validate" phx-submit="save">
+          <.live_file_input upload={@uploads[:photo]} class="file-input mb-4" />
+          <.input
+            field={@form[:accuracy]}
+            type="select"
+            options={Tag.accuracy_options()}
+            label="Accuracy"
+          />
+
+          <MapPicker.map_picker
+            lat_field={@form[:latitude]}
+            lng_field={@form[:longitude]}
+            disabled={@form[:accuracy].value == "unknown"}
+          />
+
+          <.input field={@form[:reporter]} type="text" label="Reporter" />
+          <.input field={@form[:email]} type="text" label="Email" />
+          <.input field={@form[:comment]} type="text" label="Comment" required="true" />
+
+          <footer>
+            <%= if @tag.approved_at do %>
+              <input type="submit" name="action" value="Save" class="btn btn-primary" />
+              <input type="submit" name="action" value="Delist" class="btn" />
+              <input type="submit" name="action" value="Delete" class="btn" />
+            <% else %>
+              <input type="submit" name="action" value="Approve" class="btn btn-primary" />
+              <input type="submit" name="action" value="Save" class="btn" />
+              <input type="submit" name="action" value="Delete" class="btn" />
+            <% end %>
+          </footer>
+        </.form>
+      </.container>
     </Layouts.app>
     """
   end
@@ -40,7 +58,19 @@ defmodule VeotagsWeb.TagLive.Form do
      |> allow_upload(:photo, accept: Veotags.Photo.allowed_extensions())}
   end
 
-  defp return_to("show"), do: "show"
+  @impl true
+  def handle_info({:update_location, %{id: "map-picker", lat: lat, lng: lng}}, socket) do
+    new_params = Map.merge(socket.assigns.form.params, %{"latitude" => lat, "longitude" => lng})
+
+    socket =
+      assign(socket,
+        form: to_form(Mapping.change_tag(socket.assigns.tag, new_params), action: :validate)
+      )
+
+    {:noreply, socket}
+  end
+
+  defp return_to("edit"), do: "edit"
   defp return_to(_), do: "index"
 
   defp apply_action(socket, :edit, %{"id" => id}) do
@@ -67,34 +97,48 @@ defmodule VeotagsWeb.TagLive.Form do
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
-  def handle_event("save", %{"tag" => tag_params}, socket) do
-    [file_path] =
-      consume_uploaded_entries(socket, :photo, fn %{path: path}, entry ->
+  def handle_event("save", %{"action" => "Delete"}, socket) do
+    case Mapping.delete_tag(socket.assigns.tag) do
+      {:ok, _tag} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Tag deleted successfully")
+         |> push_navigate(to: return_path(socket.assigns.return_to, nil))}
+
+      {:error, _reason} ->
+        {:noreply, put_flash(socket, :error, "Failed to delete tag")}
+    end
+  end
+
+  def handle_event("save", %{"action" => action, "tag" => tag_params}, socket) do
+    tag_params =
+      socket
+      |> consume_uploaded_entries(:photo, fn %{path: path}, entry ->
+        IO.inspect(entry, label: "Uploaded Entry")
         # Add the file extension to the temp file
         path_with_extension = path <> String.replace(entry.client_type, "image/", ".")
         File.cp!(path, path_with_extension)
         {:ok, path_with_extension}
       end)
+      |> case do
+        [file_path] -> Map.put(tag_params, "photo", file_path)
+        [] -> tag_params
+      end
 
-    tag_params = Map.put(tag_params, "photo", file_path)
-
-    save_tag(socket, socket.assigns.live_action, tag_params)
+    save_tag(socket, socket.assigns.live_action, tag_params, action)
   end
 
-  defp save_tag(socket, :edit, tag_params) do
+  defp save_tag(socket, :edit, tag_params, action) do
     case Mapping.update_tag(socket.assigns.tag, tag_params) do
       {:ok, tag} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Tag updated successfully")
-         |> push_navigate(to: return_path(socket.assigns.return_to, tag))}
+        apply_save_action(socket, tag, action)
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
 
-  defp save_tag(socket, :new, tag_params) do
+  defp save_tag(socket, :new, tag_params, _action) do
     case Mapping.submit_tag(socket.assigns.tag, tag_params) do
       {:ok, tag} ->
         {:noreply,
@@ -107,6 +151,31 @@ defmodule VeotagsWeb.TagLive.Form do
     end
   end
 
-  defp return_path("index", _tag), do: ~p"/tags"
-  defp return_path("show", tag), do: ~p"/tags/#{tag}"
+  defp apply_save_action(socket, tag, "Approve") do
+    {:ok, tag} = Mapping.approve_tag(tag)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Tag ##{tag.number} approved")
+     |> push_navigate(to: return_path(socket.assigns.return_to, tag))}
+  end
+
+  defp apply_save_action(socket, tag, "Delist") do
+    {:ok, tag} = Mapping.delist_tag(tag)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Tag ##{tag.number} delisted")
+     |> push_navigate(to: return_path(socket.assigns.return_to, tag))}
+  end
+
+  defp apply_save_action(socket, tag, "Save") do
+    {:noreply,
+     socket
+     |> put_flash(:info, "Tag saved as draft")
+     |> push_navigate(to: return_path(socket.assigns.return_to, tag))}
+  end
+
+  defp return_path("index", _tag), do: ~p"/admin/tags"
+  defp return_path("edit", tag), do: ~p"/admin/tags/#{tag}/edit"
 end

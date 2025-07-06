@@ -72,7 +72,14 @@ defmodule Veotags.Mapping.Tag do
   end
 
   def approve_changeset(tag, number) do
-    change(tag, approved_at: DateTime.utc_now() |> DateTime.truncate(:second), number: number)
+    change(tag,
+      approved_at: DateTime.utc_now() |> DateTime.truncate(:second),
+      number: tag.number || number
+    )
+  end
+
+  def delist_changeset(tag) do
+    change(tag, approved_at: nil)
   end
 
   ### VALIDATIONS ***
@@ -107,6 +114,15 @@ defmodule Veotags.Mapping.Tag do
     where(query, [t], not is_nil(t.approved_at))
   end
 
+  def submitted(query) do
+    where(query, [t], not is_nil(t.submitted_at) and is_nil(t.approved_at))
+  end
+
+  def abandoned(query) do
+    cutoff = Time.shift(DateTime.utc_now(), days: -1)
+    where(query, [t], is_nil(t.submitted_at) and t.inserted_at < ^cutoff)
+  end
+
   def with_coordinates(query) do
     where(query, [t], not is_nil(t.latitude) and not is_nil(t.longitude))
   end
@@ -115,5 +131,9 @@ defmodule Veotags.Mapping.Tag do
     query
     |> order_by(desc: :inserted_at)
     |> limit(^limit)
+  end
+
+  def earliest_first(query) do
+    order_by(query, asc: :inserted_at)
   end
 end

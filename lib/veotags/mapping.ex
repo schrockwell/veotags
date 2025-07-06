@@ -24,6 +24,13 @@ defmodule Veotags.Mapping do
     Repo.all(Tag)
   end
 
+  def list_submitted_tags do
+    Tag
+    |> Tag.submitted()
+    |> Tag.earliest_first()
+    |> Repo.all()
+  end
+
   def list_approved_tags do
     Tag
     |> Tag.approved()
@@ -144,6 +151,12 @@ defmodule Veotags.Mapping do
   def approve_tag(%Tag{} = tag) do
     tag
     |> Tag.approve_changeset(next_tag_number())
+    |> Repo.update()
+  end
+
+  def delist_tag(%Tag{} = tag) do
+    tag
+    |> Tag.delist_changeset()
     |> Repo.update()
   end
 

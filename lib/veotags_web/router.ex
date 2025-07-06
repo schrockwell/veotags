@@ -10,6 +10,10 @@ defmodule VeotagsWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :admin do
+    plug :auth
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -22,10 +26,12 @@ defmodule VeotagsWeb.Router do
     live "/submit", SubmitLive.Form, :new
 
     get "/about", PageController, :about
+  end
+
+  scope "/admin", VeotagsWeb do
+    pipe_through [:browser, :admin]
 
     live "/tags", TagLive.Index, :index
-    live "/tags/new", TagLive.Form, :new
-    live "/tags/:id", TagLive.Show, :show
     live "/tags/:id/edit", TagLive.Form, :edit
   end
 
@@ -49,5 +55,12 @@ defmodule VeotagsWeb.Router do
       live_dashboard "/dashboard", metrics: VeotagsWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  defp auth(conn, _opts) do
+    Plug.BasicAuth.basic_auth(conn,
+      username: "admin",
+      password: System.fetch_env!("ADMIN_PASSWORD")
+    )
   end
 end

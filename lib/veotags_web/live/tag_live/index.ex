@@ -7,36 +7,25 @@ defmodule VeotagsWeb.TagLive.Index do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash}>
-      <.header>
-        Listing Tags
-        <:actions>
-          <.button variant="primary" navigate={~p"/tags/new"}>
-            <.icon name="hero-plus" /> New Tag
-          </.button>
-        </:actions>
-      </.header>
+      <.container>
+        <.header>Approval Queue</.header>
 
-      <.table
-        id="tags"
-        rows={@streams.tags}
-        row_click={fn {_id, tag} -> JS.navigate(~p"/tags/#{tag}") end}
-      >
-        <:col :let={{_id, tag}} label="Approved">{tag.approved_at != nil}</:col>
-        <:action :let={{_id, tag}}>
-          <div class="sr-only">
-            <.link navigate={~p"/tags/#{tag}"}>Show</.link>
-          </div>
-          <.link navigate={~p"/tags/#{tag}/edit"}>Edit</.link>
-        </:action>
-        <:action :let={{id, tag}}>
-          <.link
-            phx-click={JS.push("delete", value: %{id: tag.id}) |> hide("##{id}")}
-            data-confirm="Are you sure?"
-          >
-            Delete
-          </.link>
-        </:action>
-      </.table>
+        <.table
+          id="tags"
+          rows={@streams.tags}
+          row_click={fn {_id, tag} -> JS.navigate(~p"/admin/tags/#{tag}/edit") end}
+        >
+          <:col :let={{_id, tag}} label="Image">
+            <img
+              src={Mapping.photo_url(tag)}
+              alt="Tag Photo"
+              class="rounded-box aspect-square w-32 h-32 object-cover"
+            />
+          </:col>
+          <:col :let={{_id, tag}} label="Submitted">{date(tag.submitted_at)}</:col>
+          <:col :let={{_id, tag}} label="Reporter">{tag.reporter || "-"}</:col>
+        </.table>
+      </.container>
     </Layouts.app>
     """
   end
@@ -45,8 +34,8 @@ defmodule VeotagsWeb.TagLive.Index do
   def mount(_params, _session, socket) do
     {:ok,
      socket
-     |> assign(:page_title, "Listing Tags")
-     |> stream(:tags, Mapping.list_tags())}
+     |> assign(:page_title, "Approval Queue")
+     |> stream(:tags, Mapping.list_submitted_tags())}
   end
 
   @impl true

@@ -157,7 +157,7 @@ defmodule VeotagsWeb.CoreComponents do
   attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
   attr :class, :string, default: nil, doc: "the input class to use over defaults"
   attr :error_class, :string, default: nil, doc: "the input error class to use over defaults"
-  attr :hint, :string
+  attr :hint, :string, default: nil
 
   attr :rest, :global,
     include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength

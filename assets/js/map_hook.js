@@ -36,17 +36,17 @@ export default {
         })
           .bindPopup(marker.address)
           .on("popupopen", () => {
-            this.pushEvent("marker_selected", { id: marker.id });
+            this.pushEvent("tag_selected", { id: marker.id });
           })
           .on("popupclose", () => {
-            this.pushEvent("marker_deselected", { id: marker.id });
+            this.pushEvent("tag_deselected", { id: marker.id });
           });
 
         this.clusterGroup.addLayer(this.markers[marker.id]);
       });
     });
 
-    this.handleEvent("close_popups", () => {
+    this.handleEvent("deselect_marker", () => {
       this.clusterGroup.eachLayer((layer) => {
         if (layer.getPopup()) {
           layer.closePopup();

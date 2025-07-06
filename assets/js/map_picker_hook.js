@@ -36,20 +36,19 @@ export default {
     this._updateMarker();
   },
 
-  destroyed() {
-    // This hook is called when the LiveView is destroyed
-    console.log("MapPickerHook destroyed");
-  },
-
   _updateMarker() {
     if (this.el.dataset.lat && this.el.dataset.lng) {
+      const lat = parseFloat(this.el.dataset.lat);
+      const lng = parseFloat(this.el.dataset.lng);
+
       if (!this.marker) {
-        this.marker = L.marker([this.el.dataset.lat, this.el.dataset.lng], {
+        this.marker = L.marker([lat, lng], {
           icon: this.icon,
         }).addTo(this.map);
       }
-      this.marker.setLatLng([this.el.dataset.lat, this.el.dataset.lng]);
-      // this.map.setView([this.el.dataset.lat, this.el.dataset.lng]);
+
+      this.marker.setLatLng([lat, lng]);
+      // this.map.setView([lat, lng]);
     } else {
       if (this.marker) {
         this.map.removeLayer(this.marker);

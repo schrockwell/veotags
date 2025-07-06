@@ -68,7 +68,7 @@ defmodule VeotagsWeb.Layouts do
           </li>
           <li>
             <.link navigate={~p"/submit"} class="btn btn-primary">
-              Submit a Tag
+              Submit a VEOtag
             </.link>
           </li>
         </ul>

@@ -57,6 +57,10 @@ defmodule Veotags.Mapping do
     %Tag{}
     |> Tag.initial_photo_changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, tag} -> {:ok, update_photo_url(tag)}
+      {:error, changeset} -> {:error, changeset}
+    end
   end
 
   @doc """
@@ -152,7 +156,8 @@ defmodule Veotags.Mapping do
     if tag.photo_url == nil or
          tag.photo_url_expires_at == nil or
          DateTime.compare(tag.photo_url_expires_at, DateTime.utc_now()) == :lt do
-      update_photo_url(tag)
+      tag = update_photo_url(tag)
+      tag.photo_url
     else
       tag.photo_url
     end
@@ -166,10 +171,9 @@ defmodule Veotags.Mapping do
         tag
         |> Ecto.Changeset.change(photo_url: url, photo_url_expires_at: expires_at)
         |> Repo.update!()
-        |> Map.get(:photo_url)
 
       _ ->
-        nil
+        tag
     end
   end
 end

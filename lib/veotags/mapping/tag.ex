@@ -37,8 +37,18 @@ defmodule Veotags.Mapping.Tag do
 
   def initial_photo_changeset(tag, attrs) do
     tag
+    |> cast(attrs, [:latitude, :longitude])
     |> cast_attachments(attrs, [:photo], allow_paths: true)
     |> validate_required([:photo])
+    |> update_accuracy()
+  end
+
+  defp update_accuracy(changeset) do
+    if get_field(changeset, :latitude) != nil && get_field(changeset, :longitude) != nil do
+      change(changeset, accuracy: "exact")
+    else
+      changeset
+    end
   end
 
   def submit_changeset(tag, attrs) do

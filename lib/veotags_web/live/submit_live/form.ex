@@ -92,7 +92,7 @@ defmodule VeotagsWeb.SubmitLive.Form do
               />
 
               <footer>
-                <.button phx-disable-with="Saving..." variant="primary">Submit</.button>
+                <.button phx-disable-with="Submitting..." variant="primary">Submit</.button>
               </footer>
             </.form>
           <% end %>
@@ -141,7 +141,10 @@ defmodule VeotagsWeb.SubmitLive.Form do
         {:ok, path_with_extension}
       end)
 
-    case Mapping.create_initial_tag(%{"photo" => file_path}) do
+    %{"photo" => file_path}
+    |> Map.merge(extract_gps_coordinates(file_path))
+    |> Mapping.create_initial_tag()
+    |> case do
       {:ok, tag} ->
         socket =
           socket
@@ -203,6 +206,27 @@ defmodule VeotagsWeb.SubmitLive.Form do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset, action: :insert))}
+    end
+  end
+
+  defp extract_gps_coordinates(file_path) do
+    case Exexif.exif_from_jpeg_file(file_path) do
+      {:ok,
+       %{
+         gps: %{
+           gps_latitude: [lat_deg, lat_min, lat_sec],
+           gps_latitude_ref: lat_ref,
+           gps_longitude: [lng_deg, lng_min, lng_sec],
+           gps_longitude_ref: lng_ref
+         }
+       }} ->
+        lat = (lat_deg + lat_min / 60 + lat_sec / 3600) * if(lat_ref == "N", do: 1, else: -1)
+        lng = (lng_deg + lng_min / 60 + lng_sec / 3600) * if(lng_ref == "E", do: 1, else: -1)
+
+        %{"latitude" => lat, "longitude" => lng}
+
+      _ ->
+        %{}
     end
   end
 end

@@ -33,7 +33,7 @@ defmodule VeotagsWeb.MapLive.Show do
       
     <!-- Map area -->
       <div class={"relative #{map_column_class(@tag)}"}>
-        <div id="map" phx-hook="MapHook" phx-update="ignore" class="absolute inset-0" />
+        <div id="map" phx-hook="MapHook" phx-update="ignore" class="absolute inset-0 z-0" />
       </div>
     </Layouts.map>
     """

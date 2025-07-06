@@ -10,94 +10,92 @@ defmodule VeotagsWeb.SubmitLive.Form do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash}>
-      <main class="px-4 py-20 sm:px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl space-y-4">
-          <.header>{@page_title}</.header>
+      <.container>
+        <.header>{@page_title}</.header>
 
-          <%= if @step == 1 do %>
-            <.form
-              for={@form}
-              id="photo-form"
-              phx-change="validate-photo"
-              phx-submit="save-photo"
-              phx-hook="PhotoFormHook"
-            >
-              <fieldset class="fieldset mb-2">
-                <label for={@uploads.photo.ref} phx-drop-target={@uploads.photo.ref}>
-                  <.live_file_input
-                    upload={@uploads.photo}
-                    required="true"
-                    class="file-input file-input-primary block"
-                  />
-                </label>
-              </fieldset>
-
-              <.button type="submit" phx-disable-with="Uploading..." variant="primary">
-                Continue
-              </.button>
-            </.form>
-          <% else %>
-            <img src={Mapping.photo_url(@tag)} class="rounded-box mb-8" />
-          <% end %>
-
-          <%= if @step >= 2 do %>
-            <.form
-              for={@form}
-              id="tag-form"
-              phx-change="validate"
-              phx-submit="save"
-              phx-hook="SubmitFormHook"
-            >
-              <fieldset class="mb-8">
-                <h3 class="text-xl mb-2">Location</h3>
-
-                <.input
-                  field={@form[:accuracy]}
-                  type="select"
-                  class="w-auto select"
-                  options={Tag.accuracy_options()}
+        <%= if @step == 1 do %>
+          <.form
+            for={@form}
+            id="photo-form"
+            phx-change="validate-photo"
+            phx-submit="save-photo"
+            phx-hook="PhotoFormHook"
+          >
+            <fieldset class="fieldset mb-2">
+              <label for={@uploads.photo.ref} phx-drop-target={@uploads.photo.ref}>
+                <.live_file_input
+                  upload={@uploads.photo}
+                  required="true"
+                  class="file-input file-input-primary block"
                 />
+              </label>
+            </fieldset>
 
-                <MapPicker.map_picker
-                  lat_field={@form[:latitude]}
-                  lng_field={@form[:longitude]}
-                  disabled={@form[:accuracy].value == "unknown"}
-                />
+            <.button type="submit" phx-disable-with="Uploading..." variant="primary">
+              Continue
+            </.button>
+          </.form>
+        <% else %>
+          <img src={Mapping.photo_url(@tag)} class="rounded-box mb-8" />
+        <% end %>
 
-                <.error :if={
-                  @form.action == :insert &&
-                    (@form[:latitude].errors != [] || @form[:longitude].errors != [])
-                }>
-                  Provide a location, or select "Unknown"
-                </.error>
-              </fieldset>
-
-              <h3 class="text-xl mb-2">Reporter</h3>
+        <%= if @step >= 2 do %>
+          <.form
+            for={@form}
+            id="tag-form"
+            phx-change="validate"
+            phx-submit="save"
+            phx-hook="SubmitFormHook"
+          >
+            <fieldset class="mb-8">
+              <h3 class="text-xl mb-2">Location</h3>
 
               <.input
-                field={@form[:reporter]}
-                type="text"
-                label="Reported By"
-                placeholder="Anonymous"
-                hint="Provide your name or online handle if you want credit for submitting this photo."
+                field={@form[:accuracy]}
+                type="select"
+                class="w-auto select"
+                options={Tag.accuracy_options()}
               />
 
-              <.input
-                field={@form[:email]}
-                type="text"
-                label="E-mail"
-                placeholder="Optional"
-                hint="Your e-mail will never be published or subscribed to anything. It's only used to to contact you
+              <MapPicker.map_picker
+                lat_field={@form[:latitude]}
+                lng_field={@form[:longitude]}
+                disabled={@form[:accuracy].value == "unknown"}
+              />
+
+              <.error :if={
+                @form.action == :insert &&
+                  (@form[:latitude].errors != [] || @form[:longitude].errors != [])
+              }>
+                Provide a location, or select "Unknown"
+              </.error>
+            </fieldset>
+
+            <h3 class="text-xl mb-2">Reporter</h3>
+
+            <.input
+              field={@form[:reporter]}
+              type="text"
+              label="Reported By"
+              placeholder="Anonymous"
+              hint="Provide your name or online handle if you want credit for submitting this photo."
+            />
+
+            <.input
+              field={@form[:email]}
+              type="text"
+              label="E-mail"
+              placeholder="Optional"
+              hint="Your e-mail will never be published or subscribed to anything. It's only used to to contact you
                 about the details of this listing."
-              />
+            />
 
-              <footer>
-                <.button phx-disable-with="Submitting..." variant="primary">Submit</.button>
-              </footer>
-            </.form>
-          <% end %>
-        </div>
-      </main>
+            <footer>
+              <.button phx-disable-with="Submitting..." variant="primary">Submit</.button>
+            </footer>
+          </.form>
+        <% end %>
+      </.container>
     </Layouts.app>
     """
   end

@@ -64,6 +64,11 @@ defmodule VeotagsWeb.Layouts do
       <div class="flex-none">
         <ul class="flex flex-column px-1 space-x-4 items-center">
           <li>
+            <.link navigate={~p"/about"} class="btn btn-ghost">
+              About
+            </.link>
+          </li>
+          <li>
             <.link navigate={~p"/submit"} class="btn btn-primary">
               Submit a VEOtag
             </.link>

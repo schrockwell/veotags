@@ -1,5 +1,7 @@
 defmodule VeotagsWeb.PageController do
   use VeotagsWeb, :controller
 
-  # nothing here right now!
+  def about(conn, _params) do
+    render(conn)
+  end
 end

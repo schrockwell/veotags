@@ -20,6 +20,8 @@ defmodule VeotagsWeb.Router do
     live "/", MapLive.Show, :show
     live "/submit", SubmitLive.Form, :new
 
+    get "/about", PageController, :about
+
     live "/tags", TagLive.Index, :index
     live "/tags/new", TagLive.Form, :new
     live "/tags/:id", TagLive.Show, :show

@@ -88,8 +88,7 @@ config :swoosh, :api_client, false
 
 config :waffle,
   storage: Waffle.Storage.S3,
-  bucket: {:system, "S3_BUCKET"},
-  asset_host: {:system, "S3_ASSET_HOST"}
+  bucket: {:system, "S3_BUCKET"}
 
 config :ex_aws,
   json_codec: Jason,

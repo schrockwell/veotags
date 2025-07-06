@@ -15,9 +15,15 @@ defmodule VeotagsWeb.SubmitLive.Form do
           <.header>{@page_title}</.header>
 
           <%= if @step == 1 do %>
-            <.form for={@form} id="photo-form" phx-change="validate-photo" phx-submit="save-photo">
+            <.form
+              for={@form}
+              id="photo-form"
+              phx-change="validate-photo"
+              phx-submit="save-photo"
+              phx-hook="PhotoFormHook"
+            >
               <fieldset class="fieldset mb-2">
-                <label>
+                <label for={@uploads.photo.ref} phx-drop-target={@uploads.photo.ref}>
                   <.live_file_input
                     upload={@uploads.photo}
                     required="true"
@@ -34,8 +40,14 @@ defmodule VeotagsWeb.SubmitLive.Form do
             <img src={Mapping.photo_url(@tag)} class="rounded-box mb-8" />
           <% end %>
 
-          <.form for={@form} id="tag-form" phx-change="validate" phx-submit="save">
-            <%= if @step >= 2 do %>
+          <%= if @step >= 2 do %>
+            <.form
+              for={@form}
+              id="tag-form"
+              phx-change="validate"
+              phx-submit="save"
+              phx-hook="SubmitFormHook"
+            >
               <fieldset class="mb-8">
                 <h3 class="text-xl mb-2">Location</h3>
 
@@ -51,18 +63,39 @@ defmodule VeotagsWeb.SubmitLive.Form do
                   lng_field={@form[:longitude]}
                   disabled={@form[:accuracy].value == "unknown"}
                 />
-              </fieldset>
-            <% end %>
 
-            <%= if @step >= 3 do %>
-              <.input field={@form[:reporter]} type="text" label="Username" />
-              <.input field={@form[:email]} type="text" label="Email" />
+                <.error :if={
+                  @form.action == :insert &&
+                    (@form[:latitude].errors != [] || @form[:longitude].errors != [])
+                }>
+                  Provide a location, or select "Unknown"
+                </.error>
+              </fieldset>
+
+              <h3 class="text-xl mb-2">Details</h3>
+
+              <.input
+                field={@form[:reporter]}
+                type="text"
+                label="Reported By"
+                placeholder="Anonymous"
+                hint="Provide your name or online handle if you want credit for submitting this photo."
+              />
+
+              <.input
+                field={@form[:email]}
+                type="text"
+                label="E-mail"
+                placeholder="Optional"
+                hint="Your e-mail will never be published or subscribed to anything. It's only used to to contact you
+                about the details of this listing."
+              />
 
               <footer>
                 <.button phx-disable-with="Saving..." variant="primary">Submit</.button>
               </footer>
-            <% end %>
-          </.form>
+            </.form>
+          <% end %>
         </div>
       </main>
     </Layouts.app>
@@ -83,15 +116,20 @@ defmodule VeotagsWeb.SubmitLive.Form do
   @impl true
   def handle_info({:update_location, %{id: "map-picker", lat: lat, lng: lng}}, socket) do
     new_params = Map.merge(socket.assigns.form.params, %{"latitude" => lat, "longitude" => lng})
-    socket = assign(socket, form: to_form(Mapping.change_tag(socket.assigns.tag, new_params)))
+
+    socket =
+      assign(socket,
+        form: to_form(Mapping.change_tag(socket.assigns.tag, new_params), action: :validate)
+      )
+
     {:noreply, socket}
   end
 
   @impl true
 
+  # required for live_file_input to work
   def handle_event("validate-photo", _params, socket) do
-    # required for live_file_input to work
-    {:noreply, socket}
+    {:noreply, push_event(socket, "submit", %{id: "photo-form"})}
   end
 
   def handle_event("save-photo", _params, socket) do
@@ -143,17 +181,7 @@ defmodule VeotagsWeb.SubmitLive.Form do
   end
 
   def handle_event("save", %{"tag" => tag_params}, socket) do
-    [file_path] =
-      consume_uploaded_entries(socket, :photo, fn %{path: path}, entry ->
-        # Add the file extension to the temp file
-        path_with_extension = path <> String.replace(entry.client_type, "image/", ".")
-        File.cp!(path, path_with_extension)
-        {:ok, path_with_extension}
-      end)
-
-    tag_params = Map.put(tag_params, "photo", file_path)
-
-    save_tag(socket, socket.assigns.live_action, tag_params)
+    submit_tag(socket, socket.assigns.live_action, tag_params)
   end
 
   defp advance_step(%{assigns: %{step: 1, tag: %{photo: photo}}} = socket)
@@ -165,8 +193,8 @@ defmodule VeotagsWeb.SubmitLive.Form do
     socket
   end
 
-  defp save_tag(socket, :new, tag_params) do
-    case Mapping.submit_tag(tag_params) do
+  defp submit_tag(socket, :new, tag_params) do
+    case Mapping.submit_tag(socket.assigns.tag, tag_params) do
       {:ok, _tag} ->
         {:noreply,
          socket
@@ -174,7 +202,7 @@ defmodule VeotagsWeb.SubmitLive.Form do
          |> push_navigate(to: ~p"/")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
+        {:noreply, assign(socket, form: to_form(changeset, action: :insert))}
     end
   end
 end

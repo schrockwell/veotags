@@ -157,6 +157,7 @@ defmodule VeotagsWeb.CoreComponents do
   attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
   attr :class, :string, default: nil, doc: "the input class to use over defaults"
   attr :error_class, :string, default: nil, doc: "the input error class to use over defaults"
+  attr :hint, :string
 
   attr :rest, :global,
     include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
@@ -244,7 +245,7 @@ defmodule VeotagsWeb.CoreComponents do
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""
-    <fieldset class="fieldset mb-2">
+    <fieldset class="fieldset mb-4">
       <label>
         <span :if={@label} class="label mb-1">{@label}</span>
         <input
@@ -258,6 +259,7 @@ defmodule VeotagsWeb.CoreComponents do
           ]}
           {@rest}
         />
+        <p :if={@hint} class="label mt-1">{@hint}</p>
       </label>
       <.error :for={msg <- @errors}>{msg}</.error>
     </fieldset>
@@ -265,7 +267,7 @@ defmodule VeotagsWeb.CoreComponents do
   end
 
   # Helper used by inputs to generate form errors
-  defp error(assigns) do
+  def error(assigns) do
     ~H"""
     <p class="mt-1.5 flex gap-2 items-center text-sm text-error">
       <.icon name="hero-exclamation-circle" class="size-5" />

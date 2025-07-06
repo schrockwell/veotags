@@ -23,7 +23,7 @@ defmodule Veotags.Mapping.Tag do
     field :source_url, :string
     field :submitted_at, :utc_datetime
     field :approved_at, :utc_datetime
-    field :accuracy, :string, default: "exact"
+    field :accuracy, :string, default: "approximate"
 
     timestamps(type: :utc_datetime)
   end
@@ -54,12 +54,10 @@ defmodule Veotags.Mapping.Tag do
       :source_url
     ])
     |> change(submitted_at: DateTime.utc_now() |> DateTime.truncate(:second))
-    |> cast_attachments(attrs, [:photo], allow_paths: true)
-    |> validate_required([:photo])
-    |> validate_accuracy()
+    # |> cast_attachments(attrs, [:photo], allow_paths: true)
+    # |> validate_required([:photo])
+    |> validate_location()
     |> validate_email()
-    |> validate_number(:latitude, greater_than: -90, less_than: 90)
-    |> validate_number(:longitude, greater_than: -180, less_than: 180)
     |> validate_length(:address, max: 1000)
     |> validate_length(:email, max: 1000)
     |> validate_length(:comment, max: 1000)
@@ -71,7 +69,7 @@ defmodule Veotags.Mapping.Tag do
 
   ### VALIDATIONS ***
 
-  defp validate_accuracy(changeset) do
+  defp validate_location(changeset) do
     changeset =
       validate_inclusion(changeset, :accuracy, Enum.map(@accuracy_options, fn {_, v} -> v end))
 
@@ -81,6 +79,9 @@ defmodule Veotags.Mapping.Tag do
       |> put_change(:longitude, nil)
     else
       changeset
+      |> validate_required([:latitude, :longitude])
+      |> validate_number(:latitude, greater_than: -90, less_than: 90)
+      |> validate_number(:longitude, greater_than: -180, less_than: 180)
     end
   end
 

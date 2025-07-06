@@ -71,10 +71,10 @@ defmodule Veotags.Mapping do
       {:error, %Ecto.Changeset{}}
 
   """
-  def submit_tag(attrs) do
-    %Tag{}
+  def submit_tag(tag \\ %Tag{}, attrs) do
+    tag
     |> Tag.submit_changeset(attrs)
-    |> Repo.insert()
+    |> Repo.insert_or_update()
   end
 
   @doc """

@@ -8,6 +8,7 @@ defmodule Veotags.Mapping do
   alias Veotags.Repo
   alias Veotags.Reddit
 
+  alias Veotags.Mapping.ImportedLink
   alias Veotags.Mapping.Tag
 
   require Logger
@@ -216,9 +217,9 @@ defmodule Veotags.Mapping do
         new_reddit_names = Enum.map(posts_params, & &1.reddit_name)
 
         existing_reddit_names =
-          Tag
-          |> where([t], t.reddit_name in ^new_reddit_names)
-          |> select([t], t.reddit_name)
+          ImportedLink
+          |> where([t], t.name in ^new_reddit_names)
+          |> select([t], t.name)
           |> Repo.all()
 
         inserted_count =
@@ -227,7 +228,9 @@ defmodule Veotags.Mapping do
           |> Enum.map(fn params ->
             case create_initial_tag(params) do
               {:ok, tag} ->
-                Logger.info("Created tag #{tag.id} from Reddit post #{params[:reddit_name]}")
+                Repo.insert!(%ImportedLink{name: tag.reddit_name})
+
+                Logger.info("Created tag #{tag.id} from Reddit post #{tag.reddit_name}")
                 1
 
               {:error, changeset} ->

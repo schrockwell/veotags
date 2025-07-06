@@ -22,7 +22,7 @@ defmodule VeotagsWeb.Router do
     pipe_through :browser
 
     live "/", MapLive.Show, :show
-    live "/tags/:id", MapLive.Show, :show
+    live "/tags/:number", MapLive.Show, :show
     live "/submit", SubmitLive.Form, :new
 
     get "/about", PageController, :about

@@ -14,12 +14,12 @@ defmodule VeotagsWeb.MapLive.Show do
     {:ok, socket}
   end
 
-  def handle_params(%{"id" => id}, _uri, socket) do
-    tag = Mapping.get_tag_by!(number: id)
+  def handle_params(%{"number" => number}, _uri, socket) do
+    tag = Mapping.get_tag_by!(number: number)
 
     socket =
       if Tag.mappable?(tag) do
-        push_event(socket, "select_marker", %{id: "map", marker_id: id})
+        push_event(socket, "select_marker", %{id: "map", marker_id: tag.id})
       else
         push_event(socket, "deselect_marker", %{id: "map"})
       end
@@ -66,7 +66,7 @@ defmodule VeotagsWeb.MapLive.Show do
     ~H"""
     <button
       class="transition-transform hover:scale-105 cursor-pointer"
-      phx-click={JS.patch(~p"/tags/#{@tag.id}")}
+      phx-click={JS.patch(~p"/tags/#{@tag.number}")}
       phx-value-id={@tag.id}
     >
       <figure>
@@ -177,8 +177,8 @@ defmodule VeotagsWeb.MapLive.Show do
     push_event(socket, "put_markers", %{id: "map", markers: markers})
   end
 
-  def handle_event("tag_selected", %{"id" => id}, socket) do
-    {:noreply, push_patch(socket, to: ~p"/tags/#{id}")}
+  def handle_event("tag_selected", %{"number" => number}, socket) do
+    {:noreply, push_patch(socket, to: ~p"/tags/#{number}")}
   end
 
   def handle_event("tag_deselected", _params, socket) do

@@ -24,6 +24,7 @@ defmodule Veotags.Mapping.Tag do
     field :approved_at, :utc_datetime
     field :accuracy, :string, default: "approximate"
     field :number, :integer
+    field :reddit_name, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -60,15 +61,28 @@ defmodule Veotags.Mapping.Tag do
       :email,
       :comment,
       :reporter,
-      :source_url
+      :source_url,
+      :submitted_at,
+      :reddit_name
     ])
-    |> change(submitted_at: DateTime.utc_now() |> DateTime.truncate(:second))
+    |> put_submitted_at()
     |> cast_attachments(attrs, [:photo], allow_paths: true)
     |> validate_required([:photo])
     |> validate_location()
     |> validate_email()
     |> validate_length(:email, max: 1000)
     |> validate_length(:comment, max: 1000)
+    |> unique_constraint(:number)
+    |> unique_constraint(:reddit_name)
+    |> unsafe_validate_unique([:reddit_name], Veotags.Repo)
+  end
+
+  defp put_submitted_at(changeset) do
+    if get_field(changeset, :submitted_at) do
+      changeset
+    else
+      change(changeset, submitted_at: DateTime.utc_now() |> DateTime.truncate(:second))
+    end
   end
 
   def approve_changeset(tag, number) do

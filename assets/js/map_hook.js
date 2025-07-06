@@ -36,10 +36,10 @@ export default {
         })
           .bindPopup(`VEOtag #${marker.number}`)
           .on("popupopen", () => {
-            this.pushEvent("tag_selected", { id: marker.id });
+            this.pushEvent("tag_selected", { number: marker.number });
           })
           .on("popupclose", () => {
-            this.pushEvent("tag_deselected", { id: marker.id });
+            this.pushEvent("tag_deselected", { number: marker.number });
           });
 
         this.clusterGroup.addLayer(this.markers[marker.id]);

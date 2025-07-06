@@ -16,6 +16,7 @@ defmodule Veotags.Repo.Migrations.CreateTags do
       add :submitted_at, :utc_datetime
       add :accuracy, :string, default: "unknown"
       add :number, :integer
+      add :reddit_name, :string
 
       timestamps(type: :utc_datetime)
     end
@@ -28,5 +29,6 @@ defmodule Veotags.Repo.Migrations.CreateTags do
     create index(:tags, :reporter)
     create index(:tags, :accuracy)
     create unique_index(:tags, :number)
+    create unique_index(:tags, :reddit_name)
   end
 end

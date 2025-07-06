@@ -4,8 +4,9 @@ defmodule Veotags.Mapping do
   """
 
   import Ecto.Query, warn: false
-  alias Veotags.Repo
   alias Veotags.Photo
+  alias Veotags.Repo
+  alias Veotags.Reddit
 
   alias Veotags.Mapping.Tag
 
@@ -63,9 +64,8 @@ defmodule Veotags.Mapping do
   def get_tag_by!(clauses), do: Repo.get_by!(Tag, clauses)
 
   def create_initial_tag(attrs) do
-    %Tag{}
-    |> Tag.initial_photo_changeset(attrs)
-    |> Repo.insert()
+    attrs
+    |> submit_tag()
     |> case do
       {:ok, tag} -> {:ok, update_photo_url(tag)}
       {:error, changeset} -> {:error, changeset}
@@ -208,5 +208,39 @@ defmodule Veotags.Mapping do
     |> Enum.each(fn tag ->
       delete_tag(tag)
     end)
+  end
+
+  def enqueue_new_from_reddit do
+    case Reddit.fetch_latest() do
+      {:ok, posts_params, _after_name} ->
+        new_reddit_names = Enum.map(posts_params, & &1.reddit_name)
+
+        existing_reddit_names =
+          Tag
+          |> where([t], t.reddit_name in ^new_reddit_names)
+          |> select([t], t.reddit_name)
+          |> Repo.all()
+
+        inserted_count =
+          posts_params
+          |> Enum.reject(&(&1.reddit_name in existing_reddit_names))
+          |> Enum.map(fn params ->
+            case create_initial_tag(params) do
+              {:ok, tag} ->
+                Logger.info("Created tag #{tag.id} from Reddit post #{params[:reddit_name]}")
+                1
+
+              {:error, changeset} ->
+                Logger.error("Failed to create tag from Reddit post: #{inspect(changeset)}")
+                0
+            end
+          end)
+          |> Enum.sum()
+
+        {:ok, inserted_count}
+
+      :error ->
+        {:error, "Failed to fetch latest posts from Reddit"}
+    end
   end
 end

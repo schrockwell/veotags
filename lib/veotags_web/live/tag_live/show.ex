@@ -24,7 +24,7 @@ defmodule VeotagsWeb.TagLive.Show do
         <:item title="Address">{@tag.address}</:item>
         <:item title="Latitude">{@tag.latitude}</:item>
         <:item title="Longitude">{@tag.longitude}</:item>
-        <:item title="Radius">{@tag.radius}</:item>
+        <:item title="Accuracy">{@tag.accuracy}</:item>
         <:item title="Email">{@tag.email}</:item>
         <:item title="Comment">{@tag.comment}</:item>
         <:item title="Approved at">{@tag.approved_at}</:item>

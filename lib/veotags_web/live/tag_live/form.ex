@@ -95,7 +95,7 @@ defmodule VeotagsWeb.TagLive.Form do
   end
 
   defp save_tag(socket, :new, tag_params) do
-    case Mapping.create_tag(tag_params) do
+    case Mapping.submit_tag(tag_params) do
       {:ok, tag} ->
         {:noreply,
          socket

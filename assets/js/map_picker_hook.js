@@ -49,13 +49,13 @@ export default {
         }).addTo(this.map);
       }
       this.marker.setLatLng([this.el.dataset.lat, this.el.dataset.lng]);
-      this.map.setView([this.el.dataset.lat, this.el.dataset.lng]);
+      // this.map.setView([this.el.dataset.lat, this.el.dataset.lng]);
     } else {
       if (this.marker) {
         this.map.removeLayer(this.marker);
         this.marker = null;
       }
-      this.map.setView([41.7652445, -72.6913845], 8);
+      // this.map.setView([41.7652445, -72.6913845], 8);
     }
   },
 };

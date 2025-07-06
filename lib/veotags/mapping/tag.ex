@@ -4,49 +4,84 @@ defmodule Veotags.Mapping.Tag do
   import Ecto.Changeset
   import Ecto.Query
 
+  @accuracy_options [
+    {"Exact", "exact"},
+    {"Approximate", "approximate"},
+    {"Unknown", "unknown"}
+  ]
+
   schema "tags" do
-    field :address, :string
-    field :approved_at, :utc_datetime
-    field :comment, :string
-    field :email, :string
-    field :latitude, :float
-    field :longitude, :float
     field :photo, Veotags.Photo.Type
-    field :radius, :integer, default: 0
-    field :reporter, :string
-    field :source_url, :string
     field :photo_url, :string
     field :photo_url_expires_at, :utc_datetime
+    field :address, :string
+    field :latitude, :float
+    field :longitude, :float
+    field :comment, :string
+    field :email, :string
+    field :reporter, :string
+    field :source_url, :string
+    field :submitted_at, :utc_datetime
+    field :approved_at, :utc_datetime
+    field :accuracy, :string, default: "exact"
 
     timestamps(type: :utc_datetime)
   end
 
-  @doc false
-  def changeset(tag, attrs) do
+  def accuracy_options, do: @accuracy_options
+
+  def mappable?(%__MODULE__{latitude: nil, longitude: nil}), do: false
+  def mappable?(_tag), do: true
+
+  ### CHANGESETS  ***
+
+  def initial_photo_changeset(tag, attrs) do
+    tag
+    |> cast_attachments(attrs, [:photo], allow_paths: true)
+    |> validate_required([:photo])
+  end
+
+  def submit_changeset(tag, attrs) do
     tag
     |> cast(attrs, [
       :address,
       :latitude,
       :longitude,
-      :radius,
+      :accuracy,
       :email,
       :comment,
       :reporter,
       :source_url
     ])
+    |> change(submitted_at: DateTime.utc_now() |> DateTime.truncate(:second))
     |> cast_attachments(attrs, [:photo], allow_paths: true)
-    |> validate_required([:address, :latitude, :longitude, :radius])
+    |> validate_required([:photo])
+    |> validate_accuracy()
     |> validate_email()
     |> validate_number(:latitude, greater_than: -90, less_than: 90)
     |> validate_number(:longitude, greater_than: -180, less_than: 180)
-    |> validate_number(:radius, greater_than_or_equal_to: 0)
-    |> validate_length(:address, max: 255)
-    |> validate_length(:email, max: 255)
-    |> validate_length(:comment, max: 500)
+    |> validate_length(:address, max: 1000)
+    |> validate_length(:email, max: 1000)
+    |> validate_length(:comment, max: 1000)
   end
 
   def approve_changeset(tag) do
     change(tag, approved_at: DateTime.utc_now() |> DateTime.truncate(:second))
+  end
+
+  ### VALIDATIONS ***
+
+  defp validate_accuracy(changeset) do
+    changeset =
+      validate_inclusion(changeset, :accuracy, Enum.map(@accuracy_options, fn {_, v} -> v end))
+
+    if get_field(changeset, :accuracy) == "unknown" do
+      changeset
+      |> put_change(:latitude, nil)
+      |> put_change(:longitude, nil)
+    else
+      changeset
+    end
   end
 
   defp validate_email(changeset) do
@@ -57,8 +92,14 @@ defmodule Veotags.Mapping.Tag do
     end
   end
 
+  ### QUERIES ***
+
   def approved(query) do
     where(query, [t], not is_nil(t.approved_at))
+  end
+
+  def with_coordinates(query) do
+    where(query, [t], not is_nil(t.latitude) and not is_nil(t.longitude))
   end
 
   def recent(query, limit \\ 10) do

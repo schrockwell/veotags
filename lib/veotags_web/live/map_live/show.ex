@@ -2,6 +2,7 @@ defmodule VeotagsWeb.MapLive.Show do
   use VeotagsWeb, :live_view
 
   alias Veotags.Mapping
+  alias Veotags.Mapping.Tag
 
   def mount(_params, _session, socket) do
     socket =
@@ -85,8 +86,8 @@ defmodule VeotagsWeb.MapLive.Show do
             </tr>
             <tr>
               <th>Location</th>
-              <td>
-                <div>{coordinate(@tag)}</div>
+              <td :if={Tag.mappable?(@tag)}>
+                <div>{coordinate(@tag)} ({@tag.accuracy})</div>
                 <div class="flex gap-2">
                   <.link
                     href={"https://www.google.com/maps/search/?api=1&query=#{coordinate(@tag)}"}
@@ -106,10 +107,7 @@ defmodule VeotagsWeb.MapLive.Show do
                   </.link>
                 </div>
               </td>
-            </tr>
-            <tr :if={@tag.radius != 0}>
-              <th>Precision</th>
-              <td>±{@tag.radius / 1000}km</td>
+              <td :if={!Tag.mappable?(@tag)}>Unknown</td>
             </tr>
             <tr>
               <th>Submitted</th>
@@ -143,7 +141,7 @@ defmodule VeotagsWeb.MapLive.Show do
 
   defp push_markers(socket) do
     markers =
-      Enum.map(Mapping.list_tags(), fn tag ->
+      Enum.map(Mapping.list_mappable_tags(), fn tag ->
         %{
           id: tag.id,
           lat: tag.latitude,
@@ -162,10 +160,16 @@ defmodule VeotagsWeb.MapLive.Show do
   end
 
   def handle_event("preview_selected", %{"id" => id}, socket) do
-    {:noreply,
-     socket
-     |> push_event("select_marker", %{id: "map", marker_id: id})
-     |> assign(:tag, Mapping.get_tag!(id))}
+    tag = Mapping.get_tag!(id)
+
+    socket =
+      if Tag.mappable?(tag) do
+        push_event(socket, "select_marker", %{id: "map", marker_id: id})
+      else
+        socket
+      end
+
+    {:noreply, assign(socket, :tag, Mapping.get_tag!(id))}
   end
 
   def handle_event("marker_deselected", _params, socket) do

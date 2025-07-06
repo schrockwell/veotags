@@ -24,6 +24,19 @@ defmodule Veotags.Mapping do
     Repo.all(Tag)
   end
 
+  def list_approved_tags do
+    Tag
+    |> Tag.approved()
+    |> Repo.all()
+  end
+
+  def list_mappable_tags do
+    Tag
+    |> Tag.approved()
+    |> Tag.with_coordinates()
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single tag.
 
@@ -40,6 +53,12 @@ defmodule Veotags.Mapping do
   """
   def get_tag!(id), do: Repo.get!(Tag, id)
 
+  def create_initial_tag(attrs) do
+    %Tag{}
+    |> Tag.initial_photo_changeset(attrs)
+    |> Repo.insert()
+  end
+
   @doc """
   Creates a tag.
 
@@ -52,9 +71,9 @@ defmodule Veotags.Mapping do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_tag(attrs) do
+  def submit_tag(attrs) do
     %Tag{}
-    |> Tag.changeset(attrs)
+    |> Tag.submit_changeset(attrs)
     |> Repo.insert()
   end
 
@@ -72,7 +91,7 @@ defmodule Veotags.Mapping do
   """
   def update_tag(%Tag{} = tag, attrs) do
     tag
-    |> Tag.changeset(attrs)
+    |> Tag.submit_changeset(attrs)
     |> Repo.update()
   end
 
@@ -109,7 +128,7 @@ defmodule Veotags.Mapping do
 
   """
   def change_tag(%Tag{} = tag, attrs \\ %{}) do
-    Tag.changeset(tag, attrs)
+    Tag.submit_changeset(tag, attrs)
   end
 
   def count_tags do

@@ -88,6 +88,7 @@ defmodule VeotagsWeb do
 
       # Core UI components
       import VeotagsWeb.CoreComponents
+      import VeotagsWeb.Helpers
 
       # Common modules used in templates
       alias Phoenix.LiveView.JS

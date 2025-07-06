@@ -70,7 +70,7 @@ defmodule VeotagsWeb.Layouts do
           </li>
           <li>
             <.link navigate={~p"/submit"} class="btn btn-primary">
-              Submit a VEOtag
+              Submit <span class="hidden sm:inline">a VEOtag</span>
             </.link>
           </li>
         </ul>

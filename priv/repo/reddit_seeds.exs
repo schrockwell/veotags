@@ -4,7 +4,7 @@ alias Veotags.Mapping
 
 tags_params = [
   %{
-    address: "634 Franklin Ave, Hartford, CT",
+    comment: "634 Franklin Ave, Hartford, CT",
     latitude: 41.7309577,
     longitude: -72.674264,
     photo: "https://i.redd.it/zacuftbmgiaf1.jpeg",
@@ -13,7 +13,7 @@ tags_params = [
     accuracy: "exact"
   },
   %{
-    address: "Toledo, Ohio",
+    comment: "Toledo, Ohio",
     latitude: 41.5434109,
     longitude: -83.5895818,
     photo: "https://i.redd.it/4stbqf8b3daf1.jpeg",
@@ -23,7 +23,7 @@ tags_params = [
     accuracy: "approximate"
   },
   %{
-    address: "Oakwood Ave & Park Rd, West Hartford, CT",
+    comment: "Oakwood Ave & Park Rd, West Hartford, CT",
     latitude: 41.7578489,
     longitude: -72.7225853,
     photo: "https://i.redd.it/8d68wto5kx9f1.jpeg",
@@ -33,7 +33,7 @@ tags_params = [
     accuracy: "exact"
   },
   %{
-    address: "Brewster, NY Rest Area",
+    comment: "Brewster, NY Rest Area",
     latitude: 41.3620114,
     longitude: -73.630862,
     photo: "https://i.redd.it/1qt18q98h4te1.jpeg",
@@ -43,7 +43,9 @@ tags_params = [
   }
 ]
 
-Enum.each(tags_params, fn tag_params ->
+tags_params
+|> Enum.reverse()
+|> Enum.each(fn tag_params ->
   {:ok, tag} = Mapping.submit_tag(tag_params)
   Mapping.approve_tag(tag)
 end)

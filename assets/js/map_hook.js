@@ -34,7 +34,7 @@ export default {
         this.markers[marker.id] = L.marker([marker.lat, marker.lng], {
           icon: this.icon,
         })
-          .bindPopup(marker.address)
+          .bindPopup(`VEOtag #${marker.number}`)
           .on("popupopen", () => {
             this.pushEvent("tag_selected", { id: marker.id });
           })

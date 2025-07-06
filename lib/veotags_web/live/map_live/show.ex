@@ -15,7 +15,7 @@ defmodule VeotagsWeb.MapLive.Show do
   end
 
   def handle_params(%{"id" => id}, _uri, socket) do
-    tag = Mapping.get_tag!(id)
+    tag = Mapping.get_tag_by!(number: id)
 
     socket =
       if Tag.mappable?(tag) do
@@ -38,7 +38,7 @@ defmodule VeotagsWeb.MapLive.Show do
     ~H"""
     <Layouts.map flash={@flash}>
       <!-- Sidebar -->
-      <aside class={"lg:w-1/3 bg-base-200 overflow-y-auto #{sidebar_column_class(@tag)}"}>
+      <aside class={"lg:w-1/3 w-full bg-base-200 overflow-y-auto #{sidebar_column_class(@tag)}"}>
         <.tag_details :if={@tag} tag={@tag} />
 
         <div :if={!@tag} class="p-4">
@@ -78,7 +78,7 @@ defmodule VeotagsWeb.MapLive.Show do
     ~H"""
     <div>
       <div class="flex justify-between items-start sticky top-0 bg-base-200 p-4">
-        <h3 class="text-xl font-medium mt-2">{@tag.address}</h3>
+        <h3 class="text-xl font-medium mt-2">VEOtag #{@tag.number}</h3>
 
         <button phx-click={JS.patch(~p"/")} class="btn btn-circle btn-neutral btn-lg">
           <.icon name="hero-x-mark" class="w-6 h-6" />
@@ -87,21 +87,25 @@ defmodule VeotagsWeb.MapLive.Show do
 
       <div class="p-4 pt-0 flex flex-col gap-8">
         <.link href={@photo_url} target="_blank">
-          <img src={@photo_url} class="w-full rounded-box" />
+          <img src={@photo_url} class="max-w-full max-h-[500px] rounded-box mx-auto" />
         </.link>
 
         <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
           <table class="table">
             <tbody>
-              <tr :if={@tag.reporter}>
+              <tr :if={@tag.comment}>
+                <th>Comment</th>
+                <td>{@tag.comment}</td>
+              </tr>
+              <tr>
                 <th>Source</th>
                 <td>
-                  {@tag.reporter}
-                  <div :if={@tag.source_url}>
+                  {@tag.reporter || "Anonymous"}
+                  <span :if={@tag.source_url}>
                     <.link href={@tag.source_url} target="_blank" class="link link-primary">
-                      {URI.parse(@tag.source_url).host}
+                      ({URI.parse(@tag.source_url).host})
                     </.link>
-                  </div>
+                  </span>
                 </td>
               </tr>
               <tr>
@@ -131,15 +135,10 @@ defmodule VeotagsWeb.MapLive.Show do
               </tr>
               <tr>
                 <th>Submitted</th>
-                <td>{@tag.inserted_at}</td>
+                <td>{date(@tag.submitted_at)}</td>
               </tr>
             </tbody>
           </table>
-        </div>
-
-        <div :if={@tag.comment}>
-          <h3 class="text-lg font-medium">Comment</h3>
-          <div class="prose">{text_to_html(@tag.comment)}</div>
         </div>
       </div>
     </div>
@@ -167,7 +166,7 @@ defmodule VeotagsWeb.MapLive.Show do
           id: tag.id,
           lat: tag.latitude,
           lng: tag.longitude,
-          address: tag.address
+          number: tag.number
         }
       end)
 

@@ -14,7 +14,6 @@ defmodule Veotags.Mapping.Tag do
     field :photo, Veotags.Photo.Type
     field :photo_url, :string
     field :photo_url_expires_at, :utc_datetime
-    field :address, :string
     field :latitude, :float
     field :longitude, :float
     field :comment, :string
@@ -24,6 +23,7 @@ defmodule Veotags.Mapping.Tag do
     field :submitted_at, :utc_datetime
     field :approved_at, :utc_datetime
     field :accuracy, :string, default: "approximate"
+    field :number, :integer
 
     timestamps(type: :utc_datetime)
   end
@@ -54,7 +54,6 @@ defmodule Veotags.Mapping.Tag do
   def submit_changeset(tag, attrs) do
     tag
     |> cast(attrs, [
-      :address,
       :latitude,
       :longitude,
       :accuracy,
@@ -64,17 +63,16 @@ defmodule Veotags.Mapping.Tag do
       :source_url
     ])
     |> change(submitted_at: DateTime.utc_now() |> DateTime.truncate(:second))
-    # |> cast_attachments(attrs, [:photo], allow_paths: true)
-    # |> validate_required([:photo])
+    |> cast_attachments(attrs, [:photo], allow_paths: true)
+    |> validate_required([:photo])
     |> validate_location()
     |> validate_email()
-    |> validate_length(:address, max: 1000)
     |> validate_length(:email, max: 1000)
     |> validate_length(:comment, max: 1000)
   end
 
-  def approve_changeset(tag) do
-    change(tag, approved_at: DateTime.utc_now() |> DateTime.truncate(:second))
+  def approve_changeset(tag, number) do
+    change(tag, approved_at: DateTime.utc_now() |> DateTime.truncate(:second), number: number)
   end
 
   ### VALIDATIONS ***

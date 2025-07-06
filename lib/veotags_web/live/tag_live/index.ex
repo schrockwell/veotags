@@ -21,7 +21,6 @@ defmodule VeotagsWeb.TagLive.Index do
         rows={@streams.tags}
         row_click={fn {_id, tag} -> JS.navigate(~p"/tags/#{tag}") end}
       >
-        <:col :let={{_id, tag}} label="Address">{tag.address}</:col>
         <:col :let={{_id, tag}} label="Approved">{tag.approved_at != nil}</:col>
         <:action :let={{_id, tag}}>
           <div class="sr-only">

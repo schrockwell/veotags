@@ -3,7 +3,6 @@ defmodule Veotags.Repo.Migrations.CreateTags do
 
   def change do
     create table(:tags) do
-      add :address, :text
       add :latitude, :float
       add :longitude, :float
       add :email, :text
@@ -16,6 +15,7 @@ defmodule Veotags.Repo.Migrations.CreateTags do
       add :photo_url_expires_at, :utc_datetime
       add :submitted_at, :utc_datetime
       add :accuracy, :string, default: "unknown"
+      add :number, :integer
 
       timestamps(type: :utc_datetime)
     end
@@ -27,5 +27,6 @@ defmodule Veotags.Repo.Migrations.CreateTags do
     create index(:tags, :approved_at)
     create index(:tags, :reporter)
     create index(:tags, :accuracy)
+    create unique_index(:tags, :number)
   end
 end

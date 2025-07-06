@@ -53,6 +53,8 @@ defmodule Veotags.Mapping do
   """
   def get_tag!(id), do: Repo.get!(Tag, id)
 
+  def get_tag_by!(clauses), do: Repo.get_by!(Tag, clauses)
+
   def create_initial_tag(attrs) do
     %Tag{}
     |> Tag.initial_photo_changeset(attrs)
@@ -141,8 +143,17 @@ defmodule Veotags.Mapping do
 
   def approve_tag(%Tag{} = tag) do
     tag
-    |> Tag.approve_changeset()
+    |> Tag.approve_changeset(next_tag_number())
     |> Repo.update()
+  end
+
+  defp next_tag_number do
+    Tag
+    |> Repo.aggregate(:max, :number)
+    |> case do
+      nil -> 1
+      max -> max + 1
+    end
   end
 
   def list_recent_tags(opts \\ []) do

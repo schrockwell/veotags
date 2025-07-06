@@ -12,6 +12,7 @@ defmodule Veotags.Application do
       Veotags.Repo,
       {DNSCluster, query: Application.get_env(:veotags, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Veotags.PubSub},
+      Veotags.Scheduler,
       # Start a worker by calling: Veotags.Worker.start_link(arg)
       # {Veotags.Worker, arg},
       # Start to serve requests, typically the last entry

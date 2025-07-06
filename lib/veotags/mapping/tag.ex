@@ -119,7 +119,7 @@ defmodule Veotags.Mapping.Tag do
   end
 
   def abandoned(query) do
-    cutoff = Time.shift(DateTime.utc_now(), days: -1)
+    cutoff = DateTime.shift(DateTime.utc_now(), day: -1)
     where(query, [t], is_nil(t.submitted_at) and t.inserted_at < ^cutoff)
   end
 

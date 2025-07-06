@@ -11,6 +11,11 @@ config :veotags,
   ecto_repos: [Veotags.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+config :veotags, Veotags.Scheduler,
+  jobs: [
+    {"@daily", {Veotags.Mapping, :delete_abandoned_submissions, []}}
+  ]
+
 # Configures the endpoint
 config :veotags, VeotagsWeb.Endpoint,
   url: [host: "localhost"],

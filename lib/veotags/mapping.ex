@@ -200,4 +200,13 @@ defmodule Veotags.Mapping do
         tag
     end
   end
+
+  def delete_abandoned_submissions do
+    Tag
+    |> Tag.abandoned()
+    |> Repo.all()
+    |> Enum.each(fn tag ->
+      delete_tag(tag)
+    end)
+  end
 end

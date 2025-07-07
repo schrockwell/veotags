@@ -31,10 +31,12 @@ defmodule VeotagsWeb.MapLive.Show do
   end
 
   def handle_params(_params, _uri, socket) do
+    previous_tag_id = socket.assigns[:tag] && socket.assigns.tag.id
+
     {:noreply,
      socket
      |> assign(:tag, nil)
-     |> push_event("deselect_marker", %{id: "map"})
+     |> push_event("deselect_marker", %{id: "map", marker_id: previous_tag_id})
      |> assign(:page_title, "Map")}
   end
 
@@ -77,7 +79,7 @@ defmodule VeotagsWeb.MapLive.Show do
   end
 
   defp tag_details(assigns) do
-    assigns = Map.put(assigns, :photo_url, Mapping.photo_url(assigns.tag))
+    assigns = assign(assigns, photo_url: Mapping.photo_url(assigns.tag))
 
     ~H"""
     <div>

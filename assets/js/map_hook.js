@@ -35,28 +35,38 @@ export default {
           icon: this.icon,
         })
           .bindPopup(`VEOtag #${marker.number}`)
-          .on("popupopen", () => {
+          .on("click", () => {
+            // Normally when select_marker is handled, we want to zoom in on the marker. But if the user
+            // just clicked the marker, we don't want the map panning and zooming around under their cursor.
+            this.ignoreNextMove = true;
+
+            clearTimeout(this.deselectTimer);
             this.pushEvent("tag_selected", { number: marker.number });
           })
           .on("popupclose", () => {
-            this.pushEvent("tag_deselected", { number: marker.number });
+            // Don't deselect immediately - when the user clicks another marker, let its click event trigger
+            this.deselectTimer = setTimeout(() => {
+              this.pushEvent("tag_deselected", { number: marker.number });
+            }, 200);
           });
 
         this.clusterGroup.addLayer(this.markers[marker.id]);
       });
     });
 
-    this.handleEvent("deselect_marker", () => {
-      this.clusterGroup.eachLayer((layer) => {
-        if (layer.getPopup()) {
-          layer.closePopup();
-        }
-      });
+    this.handleEvent("deselect_marker", ({ marker_id }) => {
+      if (this.markers[marker_id]) {
+        this.markers[marker_id].closePopup();
+      }
     });
 
     this.handleEvent("select_marker", ({ marker_id }) => {
       if (this.markers[marker_id]) {
-        this.map.setView(this.markers[marker_id].getLatLng(), 14);
+        if (this.ignoreNextMove) {
+          this.ignoreNextMove = false;
+        } else {
+          this.map.setView(this.markers[marker_id].getLatLng(), 14);
+        }
         this.markers[marker_id].openPopup();
       }
     });

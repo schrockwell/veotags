@@ -240,6 +240,7 @@ defmodule Veotags.Mapping do
           end)
           |> Enum.sum()
 
+        Logger.info("Inserted #{inserted_count} new tags")
         {:ok, inserted_count}
 
       :error ->

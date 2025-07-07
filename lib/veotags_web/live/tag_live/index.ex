@@ -8,22 +8,29 @@ defmodule VeotagsWeb.TagLive.Index do
     ~H"""
     <Layouts.app flash={@flash}>
       <.container>
-        <.header>Approval Queue</.header>
+        <.header>
+          Approval Queue
+          <:actions>
+            <.button :if={!@fetching?} phx-click="fetch" variant="primary">
+              Fetch from Reddit
+            </.button>
+          </:actions>
+        </.header>
 
         <.table
           id="tags"
-          rows={@streams.tags}
-          row_click={fn {_id, tag} -> JS.navigate(~p"/admin/tags/#{tag}/edit") end}
+          rows={@tags}
+          row_click={fn tag -> JS.navigate(~p"/admin/tags/#{tag}/edit") end}
         >
-          <:col :let={{_id, tag}} label="Image">
+          <:col :let={tag} label="Image">
             <img
               src={Mapping.photo_url(tag)}
               alt="Tag Photo"
               class="rounded-box aspect-square w-32 h-32 object-cover"
             />
           </:col>
-          <:col :let={{_id, tag}} label="Submitted">{date(tag.submitted_at)}</:col>
-          <:col :let={{_id, tag}} label="Reporter">{tag.reporter || "-"}</:col>
+          <:col :let={tag} label="Submitted">{date(tag.submitted_at)}</:col>
+          <:col :let={tag} label="Reporter">{tag.reporter || "-"}</:col>
         </.table>
       </.container>
     </Layouts.app>
@@ -32,17 +39,38 @@ defmodule VeotagsWeb.TagLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    Phoenix.PubSub.subscribe(Veotags.PubSub, "tags")
+
     {:ok,
      socket
      |> assign(:page_title, "Approval Queue")
-     |> stream(:tags, Mapping.list_submitted_tags())}
+     |> load_tags()}
   end
 
   @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    tag = Mapping.get_tag!(id)
-    {:ok, _} = Mapping.delete_tag(tag)
+  def handle_event("fetch", _params, socket) do
+    parent = self()
 
-    {:noreply, stream_delete(socket, :tags, tag)}
+    Task.async(fn ->
+      Mapping.enqueue_new_from_reddit()
+      send(parent, :load_tags)
+    end)
+
+    {:noreply, assign(socket, :fetching?, true)}
+  end
+
+  @impl true
+  def handle_info(:load_tags, socket) do
+    {:noreply, load_tags(socket)}
+  end
+
+  def handle_info(_msg, socket) do
+    {:noreply, socket}
+  end
+
+  defp load_tags(socket) do
+    socket
+    |> assign(:tags, Mapping.list_submitted_tags())
+    |> assign(:fetching?, false)
   end
 end

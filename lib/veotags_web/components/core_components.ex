@@ -259,7 +259,7 @@ defmodule VeotagsWeb.CoreComponents do
           ]}
           {@rest}
         />
-        <p :if={@hint} class="label mt-1">{@hint}</p>
+        <p :if={@hint} class="label mt-1 text-wrap">{@hint}</p>
       </label>
       <.error :for={msg <- @errors}>{msg}</.error>
     </fieldset>

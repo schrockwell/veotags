@@ -11,7 +11,7 @@ defmodule VeotagsWeb.SubmitLive.Form do
     ~H"""
     <Layouts.app flash={@flash}>
       <.container>
-        <.header>{@page_title}</.header>
+        <.header>Submit a VEOtag</.header>
 
         <%= if @step == 1 do %>
           <.form
@@ -230,7 +230,7 @@ defmodule VeotagsWeb.SubmitLive.Form do
         lat = (lat_deg + lat_min / 60 + lat_sec / 3600) * if(lat_ref == "N", do: 1, else: -1)
         lng = (lng_deg + lng_min / 60 + lng_sec / 3600) * if(lng_ref == "E", do: 1, else: -1)
 
-        %{"latitude" => lat, "longitude" => lng}
+        %{"latitude" => lat, "longitude" => lng, "accuracy" => "exact"}
 
       _ ->
         %{}

@@ -26,6 +26,7 @@ defmodule VeotagsWeb.Router do
     live "/submit", SubmitLive.Form, :new
 
     get "/about", PageController, :about
+    get "/up", PageController, :up
   end
 
   scope "/admin", VeotagsWeb do

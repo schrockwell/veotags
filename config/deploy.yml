@@ -1,13 +1,13 @@
 # Name of your application. Used to uniquely configure containers.
-service: my-app
+service: veotags
 
 # Name of the container image.
-image: my-user/my-app
+image: schrockwell/veotags
 
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - veotags.com
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -19,15 +19,15 @@ servers:
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
   ssl: true
-  host: app.example.com
-  # Proxy connects to your container on port 80 by default.
-  # app_port: 3000
+  host: veotags.com
+  app_port: 4000
 
 # Credentials for your image host.
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
-  username: my-user
+  server: registry.digitalocean.com
+  username: schrockwell@gmail.com
 
   # Always use an access token rather than real password (pulled from .kamal/secrets).
   password:
@@ -36,24 +36,34 @@ registry:
 # Configure builder setup.
 builder:
   arch: amd64
+  remote: ssh://root@veotags.com # build on the correct architecture
   # Pass in additional build args needed for your Dockerfile.
   # args:
   #   RUBY_VERSION: <%= ENV["RBENV_VERSION"] || ENV["rvm_ruby_string"] || "#{RUBY_ENGINE}-#{RUBY_ENGINE_VERSION}" %>
+  # Inject ENV variables into containers (secrets come from .kamal/secrets).
+  #
 
-# Inject ENV variables into containers (secrets come from .kamal/secrets).
-#
-# env:
-#   clear:
-#     DB_HOST: 192.168.0.2
-#   secret:
-#     - RAILS_MASTER_KEY
-
+env:
+  clear:
+    AWS_HOST: nyc3.digitaloceanspaces.com
+    AWS_REGION: nyc3
+    PHX_HOST: veotags.com
+    POOL_SIZE: 2
+    S3_BUCKET: veotags-prod
+  secret:
+    - ADMIN_PASSWORD
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - DATABASE_URL
+    - GEOCODING_API_KEY
+    - SECRET_KEY_BASE
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal app logs -r job" will tail logs from the first server in the job section.
 #
-# aliases:
-#   shell: app exec --interactive --reuse "bash"
-
+aliases:
+  console: app exec --interactive --reuse "/app/bin/veotags remote"
+  shell: app exec --interactive --reuse "/bin/bash"
+  logs: app logs -f
 # Use a different ssh user than root
 #
 # ssh:

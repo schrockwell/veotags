@@ -7,6 +7,9 @@ import Config
 # before starting your production server.
 config :veotags, VeotagsWeb.Endpoint, cache_static_manifest: "priv/static/cache_manifest.json"
 
+# DigitalOcean hosted PostgreSQL database requires SSL
+config :veotags, Veotags.Repo, ssl: true
+
 # Configures Swoosh API Client
 config :swoosh, api_client: Swoosh.ApiClient.Req
 

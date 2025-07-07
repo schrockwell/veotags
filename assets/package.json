@@ -1,7 +1,0 @@
-{
-  "name": "assets",
-  "dependencies": {
-    "leaflet": "^1.9.4",
-    "leaflet.markercluster": "^1.5.3"
-  }
-}

@@ -1,5 +1,5 @@
-import L from "leaflet";
-import "leaflet.markercluster";
+import L from "../vendor/leaflet";
+import "../vendor/leaflet.markercluster";
 
 export default {
   mounted() {

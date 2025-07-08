@@ -2,12 +2,9 @@ defmodule VeotagsWeb.PageController do
   use VeotagsWeb, :controller
 
   def about(conn, _params) do
-    hero_tag = Veotags.Mapping.random_tag()
-    hero_url = Veotags.Mapping.photo_url(hero_tag)
-
     conn
     |> assign(:page_title, "About")
-    |> assign(:hero_url, hero_url)
+    |> assign(:hero_url, VeotagsWeb.Helpers.photo_url(Veotags.Mapping.random_tag()))
     |> render()
   end
 

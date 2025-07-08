@@ -12,8 +12,6 @@ defmodule Veotags.Mapping.Tag do
 
   schema "tags" do
     field :photo, Veotags.Photo.Type
-    field :photo_url, :string
-    field :photo_url_expires_at, :utc_datetime
     field :latitude, :float
     field :longitude, :float
     field :comment, :string
@@ -23,7 +21,6 @@ defmodule Veotags.Mapping.Tag do
     field :submitted_at, :utc_datetime
     field :approved_at, :utc_datetime
     field :accuracy, :string, default: "approximate"
-    field :number, :integer
     field :reddit_name, :string
 
     timestamps(type: :utc_datetime)
@@ -53,8 +50,7 @@ defmodule Veotags.Mapping.Tag do
     |> validate_location()
     |> validate_email()
     |> validate_length(:email, max: 1000)
-    |> validate_length(:comment, max: 1000)
-    |> unique_constraint(:number)
+    |> validate_length(:comment, max: 100)
     |> unique_constraint(:reddit_name)
     |> unsafe_validate_unique([:reddit_name], Veotags.Repo)
   end
@@ -73,10 +69,9 @@ defmodule Veotags.Mapping.Tag do
     end
   end
 
-  def approve_changeset(tag, number) do
+  def approve_changeset(tag) do
     change(tag,
-      approved_at: DateTime.utc_now() |> DateTime.truncate(:second),
-      number: tag.number || number
+      approved_at: DateTime.utc_now() |> DateTime.truncate(:second)
     )
   end
 
@@ -84,7 +79,7 @@ defmodule Veotags.Mapping.Tag do
     change(tag, approved_at: nil)
   end
 
-  ### VALIDATIONS ***
+  ### VALIDATIONS ###
 
   defp validate_location(changeset) do
     changeset =
@@ -110,7 +105,7 @@ defmodule Veotags.Mapping.Tag do
     end
   end
 
-  ### QUERIES ***
+  ### QUERIES ###
 
   def approved(query) do
     where(query, [t], not is_nil(t.approved_at))

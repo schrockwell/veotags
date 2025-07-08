@@ -156,7 +156,7 @@ defmodule Veotags.Mapping do
 
   def approve_tag(%Tag{} = tag) do
     tag
-    |> Tag.approve_changeset(next_tag_number())
+    |> Tag.approve_changeset()
     |> Repo.update()
   end
 
@@ -166,24 +166,11 @@ defmodule Veotags.Mapping do
     |> Repo.update()
   end
 
-  defp next_tag_number do
-    Tag
-    |> Repo.aggregate(:max, :number)
-    |> case do
-      nil -> 1
-      max -> max + 1
-    end
-  end
-
   def list_recent_tags(opts \\ []) do
     Tag
     |> Tag.approved()
     |> Tag.recent(opts[:limit] || 10)
     |> Repo.all()
-  end
-
-  def photo_url(%Tag{} = tag, version \\ :px2000) do
-    Photo.url({tag.photo, tag}, version, [])
   end
 
   def delete_abandoned_submissions do

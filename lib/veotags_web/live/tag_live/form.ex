@@ -11,7 +11,7 @@ defmodule VeotagsWeb.TagLive.Form do
     ~H"""
     <Layouts.app flash={@flash}>
       <.container>
-        <img src={Mapping.photo_url(@tag)} alt="Tag Photo" class="rounded-box max-h-[500px] mx-auto" />
+        <img src={photo_url(@tag)} alt="Tag Photo" class="rounded-box max-h-[500px] mx-auto" />
 
         <.form for={@form} id="tag-form" phx-change="validate" phx-submit="save">
           <.live_file_input upload={@uploads[:photo]} class="file-input mb-4" />
@@ -29,8 +29,8 @@ defmodule VeotagsWeb.TagLive.Form do
           />
 
           <.input field={@form[:reporter]} type="text" label="Reporter" />
-          <.input field={@form[:email]} type="text" label="Email" />
-          <.input field={@form[:comment]} type="text" label="Comment" required="true" />
+          <.input field={@form[:email]} type="text" label="Email" maxlength="1000" />
+          <.input field={@form[:comment]} type="text" label="Comment" required="true" maxlength="100" />
 
           <footer>
             <%= if @tag.approved_at do %>
@@ -156,7 +156,7 @@ defmodule VeotagsWeb.TagLive.Form do
 
     {:noreply,
      socket
-     |> put_flash(:info, "Tag ##{tag.number} approved")
+     |> put_flash(:info, "Tag ##{tag.id} approved")
      |> push_navigate(to: return_path(socket.assigns.return_to, tag))}
   end
 
@@ -165,7 +165,7 @@ defmodule VeotagsWeb.TagLive.Form do
 
     {:noreply,
      socket
-     |> put_flash(:info, "Tag ##{tag.number} delisted")
+     |> put_flash(:info, "Tag ##{tag.id} delisted")
      |> push_navigate(to: return_path(socket.assigns.return_to, tag))}
   end
 

@@ -38,19 +38,19 @@ export default {
         this.markers[marker.id] = L.marker([marker.lat, marker.lng], {
           icon: this.icon,
         })
-          .bindPopup(marker.comment || `VEOtag #${marker.number}`)
+          .bindPopup(marker.title)
           .on("click", () => {
             // Normally when select_marker is handled, we want to zoom in on the marker. But if the user
             // just clicked the marker, we don't want the map panning and zooming around under their cursor.
             this.ignoreNextMove = true;
 
             clearTimeout(this.deselectTimer);
-            this.pushEvent("tag_selected", { number: marker.number });
+            this.pushEvent("tag_selected", { id: marker.id });
           })
           .on("popupclose", () => {
             // Don't deselect immediately - when the user clicks another marker, let its click event trigger
             this.deselectTimer = setTimeout(() => {
-              this.pushEvent("tag_deselected", { number: marker.number });
+              this.pushEvent("tag_deselected", { id: marker.id });
             }, 200);
           });
 

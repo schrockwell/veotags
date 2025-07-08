@@ -14,8 +14,8 @@ defmodule VeotagsWeb.MapLive.Show do
     {:ok, socket}
   end
 
-  def handle_params(%{"number" => number}, _uri, socket) do
-    tag = Mapping.get_tag_by!(number: number)
+  def handle_params(%{"id" => id}, _uri, socket) do
+    tag = Mapping.get_tag!(id)
 
     socket =
       if Tag.mappable?(tag) do
@@ -27,7 +27,7 @@ defmodule VeotagsWeb.MapLive.Show do
     {:noreply,
      socket
      |> assign(:tag, tag)
-     |> assign(:page_title, "##{tag.number}")}
+     |> assign(:page_title, "##{tag.id}")}
   end
 
   def handle_params(_params, _uri, socket) do
@@ -68,12 +68,12 @@ defmodule VeotagsWeb.MapLive.Show do
     ~H"""
     <button
       class="transition-transform hover:scale-105 cursor-pointer"
-      phx-click={JS.patch(~p"/tags/#{@tag.number}")}
+      phx-click={JS.patch(~p"/tags/#{@tag.id}")}
       phx-value-id={@tag.id}
     >
       <figure>
         <img
-          src={Mapping.photo_url(@tag, :px500)}
+          src={photo_url(@tag, :px500)}
           class="aspect-square object-cover rounded-lg"
           loading="lazy"
         />
@@ -83,19 +83,18 @@ defmodule VeotagsWeb.MapLive.Show do
   end
 
   defp tag_details(assigns) do
-    assigns = assign(assigns, photo_url: Mapping.photo_url(assigns.tag))
+    assigns = assign(assigns, photo_url: photo_url(assigns.tag))
 
     ~H"""
     <div>
       <div class="sticky top-0 bg-base-200 p-4">
         <div class="flex justify-between items-start">
-          <h3 class="text-xl font-semibold mt-2">VEOtag #{@tag.number}</h3>
+          <h3 class="text-xl font-semibold mt-2">{tag_title(@tag)}</h3>
 
           <button phx-click={JS.patch(~p"/")} class="btn btn-circle btn-neutral btn-lg">
             <.icon name="hero-x-mark" class="w-6 h-6" />
           </button>
         </div>
-        <h4 :if={@tag.comment}>{@tag.comment}</h4>
       </div>
 
       <div class="p-4 pt-0 flex flex-col gap-8">
@@ -175,16 +174,15 @@ defmodule VeotagsWeb.MapLive.Show do
           id: tag.id,
           lat: tag.latitude,
           lng: tag.longitude,
-          number: tag.number,
-          comment: tag.comment
+          title: tag_title(tag)
         }
       end)
 
     push_event(socket, "put_markers", %{id: "map", markers: markers})
   end
 
-  def handle_event("tag_selected", %{"number" => number}, socket) do
-    {:noreply, push_patch(socket, to: ~p"/tags/#{number}")}
+  def handle_event("tag_selected", %{"id" => id}, socket) do
+    {:noreply, push_patch(socket, to: ~p"/tags/#{id}")}
   end
 
   def handle_event("tag_deselected", _params, socket) do

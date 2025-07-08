@@ -36,7 +36,7 @@ defmodule VeotagsWeb.SubmitLive.Form do
             </.button>
           </.form>
         <% else %>
-          <img src={Mapping.photo_url(@tag)} class="rounded-box mb-8" />
+          <img src={photo_url(@tag)} class="rounded-box mb-8" />
         <% end %>
 
         <%= if @step >= 2 do %>
@@ -78,8 +78,8 @@ defmodule VeotagsWeb.SubmitLive.Form do
               type="text"
               label="Comment"
               placeholder="Optional"
-              hint="Any additional details about the location of this tag."
-              maxlength="1000"
+              hint="Describe the location of this tag (100 characters max)."
+              maxlength="100"
             />
 
             <.input

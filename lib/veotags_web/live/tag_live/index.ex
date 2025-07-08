@@ -24,7 +24,7 @@ defmodule VeotagsWeb.TagLive.Index do
         >
           <:col :let={tag} label="Image">
             <img
-              src={Mapping.photo_url(tag)}
+              src={photo_url(tag)}
               alt="Tag Photo"
               class="rounded-box aspect-square w-32 h-32 object-cover"
             />

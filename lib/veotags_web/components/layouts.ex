@@ -41,7 +41,7 @@ defmodule VeotagsWeb.Layouts do
 
   def map(assigns) do
     ~H"""
-    <div class="h-screen flex flex-col overflow-hidden">
+    <div class="h-dvh flex flex-col overflow-hidden">
       <.navbar />
 
       <div class="flex flex-1 overflow-hidden">

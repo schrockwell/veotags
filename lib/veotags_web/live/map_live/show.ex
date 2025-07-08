@@ -8,7 +8,7 @@ defmodule VeotagsWeb.MapLive.Show do
     socket =
       socket
       |> assign(:tag_count, Mapping.count_tags())
-      |> assign(:recent_tags, Mapping.list_recent_tags(limit: 10))
+      |> assign(:recent_tags, Mapping.list_recent_tags(limit: 100))
       |> push_markers()
 
     {:ok, socket}
@@ -72,7 +72,11 @@ defmodule VeotagsWeb.MapLive.Show do
       phx-value-id={@tag.id}
     >
       <figure>
-        <img src={Mapping.photo_url(@tag)} class="aspect-square object-cover rounded-lg" />
+        <img
+          src={Mapping.photo_url(@tag)}
+          class="aspect-square object-cover rounded-lg"
+          loading="lazy"
+        />
       </figure>
     </button>
     """
@@ -83,12 +87,15 @@ defmodule VeotagsWeb.MapLive.Show do
 
     ~H"""
     <div>
-      <div class="flex justify-between items-start sticky top-0 bg-base-200 p-4">
-        <h3 class="text-xl font-medium mt-2">VEOtag #{@tag.number}</h3>
+      <div class="sticky top-0 bg-base-200 p-4">
+        <div class="flex justify-between items-start">
+          <h3 class="text-xl font-semibold mt-2">VEOtag #{@tag.number}</h3>
 
-        <button phx-click={JS.patch(~p"/")} class="btn btn-circle btn-neutral btn-lg">
-          <.icon name="hero-x-mark" class="w-6 h-6" />
-        </button>
+          <button phx-click={JS.patch(~p"/")} class="btn btn-circle btn-neutral btn-lg">
+            <.icon name="hero-x-mark" class="w-6 h-6" />
+          </button>
+        </div>
+        <h4 :if={@tag.comment}>{@tag.comment}</h4>
       </div>
 
       <div class="p-4 pt-0 flex flex-col gap-8">
@@ -99,10 +106,6 @@ defmodule VeotagsWeb.MapLive.Show do
         <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
           <table class="table">
             <tbody>
-              <tr :if={@tag.comment}>
-                <th>Comment</th>
-                <td>{@tag.comment}</td>
-              </tr>
               <tr>
                 <th>Source</th>
                 <td>

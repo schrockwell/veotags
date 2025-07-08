@@ -36,22 +36,6 @@ defmodule Veotags.Mapping.Tag do
 
   ### CHANGESETS  ***
 
-  def initial_photo_changeset(tag, attrs) do
-    tag
-    |> cast(attrs, [:latitude, :longitude])
-    |> cast_attachments(attrs, [:photo], allow_paths: true)
-    |> validate_required([:photo])
-    |> update_accuracy()
-  end
-
-  defp update_accuracy(changeset) do
-    if get_field(changeset, :latitude) != nil && get_field(changeset, :longitude) != nil do
-      change(changeset, accuracy: "exact")
-    else
-      changeset
-    end
-  end
-
   def submit_changeset(tag, attrs) do
     tag
     |> cast(attrs, [
@@ -66,8 +50,6 @@ defmodule Veotags.Mapping.Tag do
       :reddit_name
     ])
     |> put_submitted_at()
-    |> cast_attachments(attrs, [:photo], allow_paths: true)
-    |> validate_required([:photo])
     |> validate_location()
     |> validate_email()
     |> validate_length(:email, max: 1000)
@@ -75,6 +57,12 @@ defmodule Veotags.Mapping.Tag do
     |> unique_constraint(:number)
     |> unique_constraint(:reddit_name)
     |> unsafe_validate_unique([:reddit_name], Veotags.Repo)
+  end
+
+  def attach_photo_changeset(changeset, attrs) do
+    changeset
+    |> cast_attachments(attrs, [:photo], allow_paths: true)
+    |> validate_required([:photo])
   end
 
   defp put_submitted_at(changeset) do

@@ -84,7 +84,16 @@ defmodule Veotags.Mapping do
     tag
     |> Tag.submit_changeset(attrs)
     |> Repo.insert_or_update()
+    |> upload_photos(attrs)
   end
+
+  defp upload_photos({:ok, tag}, attrs) do
+    tag
+    |> Tag.attach_photo_changeset(attrs)
+    |> Repo.update()
+  end
+
+  defp upload_photos(error, _attrs), do: error
 
   @doc """
   Updates a tag.
@@ -102,6 +111,7 @@ defmodule Veotags.Mapping do
     tag
     |> Tag.submit_changeset(attrs)
     |> Repo.update()
+    |> upload_photos(attrs)
   end
 
   @doc """
@@ -172,8 +182,8 @@ defmodule Veotags.Mapping do
     |> Repo.all()
   end
 
-  def photo_url(%Tag{} = tag) do
-    Photo.url(tag.photo)
+  def photo_url(%Tag{} = tag, version \\ :px2000) do
+    Photo.url({tag.photo, tag}, version, [])
   end
 
   def delete_abandoned_submissions do

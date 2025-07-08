@@ -73,7 +73,7 @@ defmodule VeotagsWeb.MapLive.Show do
     >
       <figure>
         <img
-          src={Mapping.photo_url(@tag)}
+          src={Mapping.photo_url(@tag, :px500)}
           class="aspect-square object-cover rounded-lg"
           loading="lazy"
         />

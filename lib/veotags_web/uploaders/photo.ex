@@ -2,10 +2,12 @@ defmodule Veotags.Photo do
   use Waffle.Definition
   use Waffle.Ecto.Definition
 
-  @versions [:original]
+  @versions [:original, :px2000, :px500]
 
   # make all uploads public (https://hexdocs.pm/waffle/Waffle.Storage.S3.html#module-access-control-permissions)
-  @acl :public_read
+  def acl(:original, _), do: :private
+  def acl(:px2000, _), do: :public_read
+  def acl(:px500, _), do: :public_read
 
   # To add a thumbnail version:
   # @versions [:original, :thumb]
@@ -56,19 +58,23 @@ defmodule Veotags.Photo do
   end
 
   # Define a thumbnail transformation:
-  # def transform(:thumb, _) do
-  #   {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250 -format png", :png}
-  # end
+  def transform(:px2000, _) do
+    {:convert, "-resize 2000x2000^ -format jpeg", :jpg}
+  end
+
+  def transform(:px500, _) do
+    {:convert, "-resize 500x500^ -sharpen 0x1 -format jpeg", :jpg}
+  end
 
   # Override the persisted filenames:
-  # def filename(version, _) do
-  #   version
-  # end
+  def filename(version, _) do
+    version
+  end
 
   # Override the storage directory:
-  # def storage_dir(version, {file, scope}) do
-  #   "uploads/user/avatars/#{scope.id}"
-  # end
+  def storage_dir(_version, {_file, scope}) do
+    "uploads/tags/#{scope.id}"
+  end
 
   # Provide a default URL if there hasn't been a file uploaded
   # def default_url(version, scope) do

@@ -49,6 +49,7 @@ env:
     AWS_REGION: nyc3
     PHX_HOST: veotags.com
     POOL_SIZE: 2
+    S3_ASSET_HOST: https://veotags-prod.nyc3.digitaloceanspaces.com
     S3_BUCKET: veotags-prod
   secret:
     - ADMIN_PASSWORD

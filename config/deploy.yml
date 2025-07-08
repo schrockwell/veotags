@@ -57,6 +57,8 @@ env:
     - AWS_SECRET_ACCESS_KEY
     - DATABASE_URL
     - GEOCODING_API_KEY
+    - PUSHOVER_APP_TOKEN
+    - PUSHOVER_USER_KEY
     - SECRET_KEY_BASE
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal app logs -r job" will tail logs from the first server in the job section.

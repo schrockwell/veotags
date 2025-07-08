@@ -107,3 +107,16 @@
 }
 
 /* This file is for your main application CSS */
+
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background-color: rgba(51, 132, 196, 0.6) !important;
+}
+
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background-color: rgba(51, 132, 196, 1) !important;
+  color: white !important;
+}

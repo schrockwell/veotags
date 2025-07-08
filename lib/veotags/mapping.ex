@@ -65,12 +65,7 @@ defmodule Veotags.Mapping do
   def get_tag_by!(clauses), do: Repo.get_by!(Tag, clauses)
 
   def create_initial_tag(attrs) do
-    attrs
-    |> submit_tag()
-    |> case do
-      {:ok, tag} -> {:ok, update_photo_url(tag)}
-      {:error, changeset} -> {:error, changeset}
-    end
+    submit_tag(attrs)
   end
 
   @doc """
@@ -178,28 +173,7 @@ defmodule Veotags.Mapping do
   end
 
   def photo_url(%Tag{} = tag) do
-    if tag.photo_url == nil or
-         tag.photo_url_expires_at == nil or
-         DateTime.compare(tag.photo_url_expires_at, DateTime.utc_now()) == :lt do
-      tag = update_photo_url(tag)
-      tag.photo_url
-    else
-      tag.photo_url
-    end
-  end
-
-  defp update_photo_url(%Tag{} = tag) do
-    Logger.debug("Generating presigned URL for tag #{tag.id}")
-
-    case Photo.presigned_url(tag.photo) do
-      {:ok, url, expires_at} ->
-        tag
-        |> Ecto.Changeset.change(photo_url: url, photo_url_expires_at: expires_at)
-        |> Repo.update!()
-
-      _ ->
-        tag
-    end
+    Photo.url(tag.photo)
   end
 
   def delete_abandoned_submissions do

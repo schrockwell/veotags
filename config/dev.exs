@@ -85,17 +85,3 @@ config :phoenix_live_view,
 
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
-
-config :waffle,
-  storage: Waffle.Storage.S3,
-  bucket: {:system, "S3_BUCKET"}
-
-config :ex_aws,
-  json_codec: Jason,
-  access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
-  secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"}
-
-config :ex_aws, :s3,
-  host: {:system, "AWS_HOST"},
-  region: {:system, "AWS_REGION"},
-  scheme: "https://"

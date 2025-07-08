@@ -4,6 +4,9 @@ defmodule Veotags.Photo do
 
   @versions [:original]
 
+  # make all uploads public (https://hexdocs.pm/waffle/Waffle.Storage.S3.html#module-access-control-permissions)
+  @acl :public_read
+
   # To add a thumbnail version:
   # @versions [:original, :thumb]
 

@@ -134,7 +134,7 @@ defmodule Veotags.Mapping do
   def delete_tag(%Tag{} = tag) do
     case Repo.delete(tag) do
       {:ok, tag} ->
-        Photo.delete(tag.photo.file_name)
+        Photo.delete({tag.photo, tag})
         {:ok, tag}
 
       {:error, changeset} ->

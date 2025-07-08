@@ -7,6 +7,7 @@ defmodule Veotags.Mapping do
   alias Veotags.Photo
   alias Veotags.Repo
   alias Veotags.Mapping.Tag
+  alias Veotags.Pushover
 
   require Logger
 
@@ -62,26 +63,20 @@ defmodule Veotags.Mapping do
   def get_tag_by!(clauses), do: Repo.get_by!(Tag, clauses)
 
   def create_initial_tag(attrs) do
-    submit_tag(attrs)
+    upsert_tag(attrs)
   end
 
-  @doc """
-  Creates a tag.
-
-  ## Examples
-
-      iex> create_tag(%{field: value})
-      {:ok, %Tag{}}
-
-      iex> create_tag(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def submit_tag(tag \\ %Tag{}, attrs) do
+  defp upsert_tag(tag \\ %Tag{}, attrs) do
     tag
     |> Tag.submit_changeset(attrs)
     |> Repo.insert_or_update()
     |> upload_photos(attrs)
+  end
+
+  def submit_tag(tag \\ %Tag{}, attrs) do
+    tag
+    |> upsert_tag(attrs)
+    |> notify_admins()
   end
 
   defp upload_photos({:ok, tag}, attrs) do
@@ -91,6 +86,19 @@ defmodule Veotags.Mapping do
   end
 
   defp upload_photos(error, _attrs), do: error
+
+  defp notify_admins({:ok, tag}) do
+    edit_tag_url = VeotagsWeb.Endpoint.url() <> "/admin/tags/#{tag.id}/edit"
+
+    Pushover.send_notification("VEOtag ##{tag.id} ready for review",
+      url: edit_tag_url,
+      url_title: "Review Tag"
+    )
+
+    {:ok, tag}
+  end
+
+  defp notify_admins(error), do: error
 
   @doc """
   Updates a tag.

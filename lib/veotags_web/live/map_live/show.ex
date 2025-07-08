@@ -155,11 +155,13 @@ defmodule VeotagsWeb.MapLive.Show do
 
   defp coordinate(tag), do: "#{latitude(tag.latitude)}, #{longitude(tag.longitude)}"
 
-  defp latitude(lat) when lat < 0, do: "#{abs(lat)}° S"
-  defp latitude(lat), do: "#{lat}° N"
+  defp latitude(lat) when lat < 0, do: "#{abs(round_coord(lat))}° S"
+  defp latitude(lat), do: "#{round_coord(lat)}° N"
 
-  defp longitude(lng) when lng < 0, do: "#{abs(lng)}° W"
-  defp longitude(lng), do: "#{lng}° E"
+  defp longitude(lng) when lng < 0, do: "#{abs(round_coord(lng))}° W"
+  defp longitude(lng), do: "#{round_coord(lng)}° E"
+
+  defp round_coord(coord) when is_float(coord), do: Float.round(coord, 6)
 
   defp sidebar_column_class(nil), do: "hidden lg:block"
   defp sidebar_column_class(_tag), do: "block"

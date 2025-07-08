@@ -120,3 +120,23 @@
   background-color: rgba(51, 132, 196, 1) !important;
   color: white !important;
 }
+
+/* Source: https://dev.to/deepakdevanand/leaflet-map-dark-theme-5ej0 */
+@media (prefers-color-scheme: dark) {
+  .leaflet-layer,
+  .leaflet-control-zoom-in,
+  .leaflet-control-zoom-out,
+  .leaflet-control-attribution {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+  }
+
+  .leaflet-container {
+    background: var(--color-base-100);
+  }
+
+  .leaflet-popup-content-wrapper,
+  .leaflet-popup-tip {
+    background: var(--color-base-100);
+    color: var(--color-base-content);
+  }
+}

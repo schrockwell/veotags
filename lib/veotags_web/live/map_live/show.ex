@@ -47,7 +47,7 @@ defmodule VeotagsWeb.MapLive.Show do
       <aside class={"lg:w-1/3 w-full bg-base-200 overflow-y-auto #{sidebar_column_class(@tag)}"}>
         <.tag_details :if={@tag} tag={@tag} />
 
-        <div :if={!@tag} class="p-4">
+        <div class={["p-4", if(is_nil(@tag), do: "block", else: "hidden")]}>
           <h3 class="text-2xl font-medium mb-6">Latest Submissions</h3>
 
           <div class="grid grid-cols-2 xl:grid-cols-3 gap-5">

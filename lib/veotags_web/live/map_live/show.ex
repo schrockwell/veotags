@@ -172,7 +172,8 @@ defmodule VeotagsWeb.MapLive.Show do
           id: tag.id,
           lat: tag.latitude,
           lng: tag.longitude,
-          number: tag.number
+          number: tag.number,
+          comment: tag.comment
         }
       end)
 

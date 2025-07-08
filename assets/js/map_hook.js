@@ -22,19 +22,23 @@ export default {
       shadowSize: [41, 41],
     });
 
-    this.clusterGroup = L.markerClusterGroup();
-    this.map.addLayer(this.clusterGroup);
+    // this.clusterGroup = L.markerClusterGroup();
+    // this.map.addLayer(this.clusterGroup);
     this.markers = {};
 
     this.handleEvent("put_markers", ({ markers }) => {
-      this.clusterGroup.clearLayers();
+      // this.clusterGroup.clearLayers();
+      Object.values(this.markers).forEach((marker) => {
+        this.map.removeLayer(marker);
+      });
+
       this.markers = {};
 
       markers.forEach((marker) => {
         this.markers[marker.id] = L.marker([marker.lat, marker.lng], {
           icon: this.icon,
         })
-          .bindPopup(`VEOtag #${marker.number}`)
+          .bindPopup(marker.comment || `VEOtag #${marker.number}`)
           .on("click", () => {
             // Normally when select_marker is handled, we want to zoom in on the marker. But if the user
             // just clicked the marker, we don't want the map panning and zooming around under their cursor.
@@ -50,7 +54,8 @@ export default {
             }, 200);
           });
 
-        this.clusterGroup.addLayer(this.markers[marker.id]);
+        // this.clusterGroup.addLayer(this.markers[marker.id]);
+        this.markers[marker.id].addTo(this.map);
       });
     });
 
@@ -65,7 +70,7 @@ export default {
         if (this.ignoreNextMove) {
           this.ignoreNextMove = false;
         } else {
-          this.map.setView(this.markers[marker_id].getLatLng(), 14);
+          this.map.setView(this.markers[marker_id].getLatLng()); //, 14);
         }
         this.markers[marker_id].openPopup();
       }

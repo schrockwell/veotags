@@ -10,11 +10,6 @@ defmodule VeotagsWeb.TagLive.Index do
       <.container>
         <.header>
           Approval Queue
-          <:actions>
-            <.button :if={!@fetching?} phx-click="fetch" variant="primary">
-              Fetch from Reddit
-            </.button>
-          </:actions>
         </.header>
 
         <.table
@@ -48,18 +43,6 @@ defmodule VeotagsWeb.TagLive.Index do
   end
 
   @impl true
-  def handle_event("fetch", _params, socket) do
-    parent = self()
-
-    Task.async(fn ->
-      Mapping.enqueue_new_from_reddit()
-      send(parent, :load_tags)
-    end)
-
-    {:noreply, assign(socket, :fetching?, true)}
-  end
-
-  @impl true
   def handle_info(:load_tags, socket) do
     {:noreply, load_tags(socket)}
   end
@@ -71,6 +54,5 @@ defmodule VeotagsWeb.TagLive.Index do
   defp load_tags(socket) do
     socket
     |> assign(:tags, Mapping.list_submitted_tags())
-    |> assign(:fetching?, false)
   end
 end

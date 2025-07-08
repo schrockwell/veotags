@@ -1,6 +1,20 @@
 <Layouts.app flash={@flash}>
   <.container>
-    <h3 class="text-2xl font-bold mb-4">More Information</h3>
+    <img src={@hero_url} class="w-full h-[400px] object-cover mb-12 rounded-xl" alt="Hero Image" />
+
+    <p>
+      A project by
+      <.link href="https://www.schrockwell.com" class="link link-primary">Rockwell Schrock</.link>
+    </p>
+
+    <p>
+      Send suggestions to
+      <.link href="mailto:feedback@veotags.com?subject=VEOtags feedback" class="link link-primary">
+        feedback@veotags.com
+      </.link>
+    </p>
+
+    <h3 class="text-2xl font-bold mb-4 mt-16">More Information on VEO</h3>
 
     <ul class="list-disc pl-6">
       <li>

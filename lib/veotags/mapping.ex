@@ -247,4 +247,12 @@ defmodule Veotags.Mapping do
         {:error, "Failed to fetch latest posts from Reddit"}
     end
   end
+
+  def random_tag do
+    Tag
+    |> Tag.approved()
+    |> order_by(fragment("RANDOM()"))
+    |> limit(1)
+    |> Repo.one()
+  end
 end

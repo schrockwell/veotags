@@ -217,23 +217,22 @@ defmodule VeotagsWeb.SubmitLive.Form do
   end
 
   defp extract_gps_coordinates(file_path) do
-    case Exexif.exif_from_jpeg_file(file_path) do
-      {:ok,
-       %{
-         gps: %{
-           gps_latitude: [lat_deg, lat_min, lat_sec],
-           gps_latitude_ref: lat_ref,
-           gps_longitude: [lng_deg, lng_min, lng_sec],
-           gps_longitude_ref: lng_ref
-         }
-       }} ->
-        lat = (lat_deg + lat_min / 60 + lat_sec / 3600) * if(lat_ref == "N", do: 1, else: -1)
-        lng = (lng_deg + lng_min / 60 + lng_sec / 3600) * if(lng_ref == "E", do: 1, else: -1)
+    with "image/jpeg" <- MIME.from_path(file_path),
+         {:ok,
+          %{
+            gps: %{
+              gps_latitude: [lat_deg, lat_min, lat_sec],
+              gps_latitude_ref: lat_ref,
+              gps_longitude: [lng_deg, lng_min, lng_sec],
+              gps_longitude_ref: lng_ref
+            }
+          }} <- Exexif.exif_from_jpeg_file(file_path) do
+      lat = (lat_deg + lat_min / 60 + lat_sec / 3600) * if(lat_ref == "N", do: 1, else: -1)
+      lng = (lng_deg + lng_min / 60 + lng_sec / 3600) * if(lng_ref == "E", do: 1, else: -1)
 
-        %{"latitude" => lat, "longitude" => lng, "accuracy" => "exact"}
-
-      _ ->
-        %{}
+      %{"latitude" => lat, "longitude" => lng, "accuracy" => "exact"}
+    else
+      _ -> %{}
     end
   end
 end

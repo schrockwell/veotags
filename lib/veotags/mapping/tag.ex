@@ -32,6 +32,10 @@ defmodule Veotags.Mapping.Tag do
 
   ### CHANGESETS  ***
 
+  def initial_changeset(tag, attrs) do
+    cast(tag, attrs, [:latitude, :longitude, :accuracy])
+  end
+
   def submit_changeset(tag, attrs) do
     tag
     |> cast(attrs, [

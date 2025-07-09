@@ -63,19 +63,17 @@ defmodule Veotags.Mapping do
   def get_tag_by!(clauses), do: Repo.get_by!(Tag, clauses)
 
   def create_initial_tag(attrs) do
-    upsert_tag(attrs)
-  end
-
-  defp upsert_tag(tag \\ %Tag{}, attrs) do
-    tag
-    |> Tag.submit_changeset(attrs)
-    |> Repo.insert_or_update()
+    %Tag{}
+    |> Tag.initial_changeset(attrs)
+    |> Repo.insert()
     |> upload_photos(attrs)
   end
 
   def submit_tag(tag \\ %Tag{}, attrs) do
     tag
-    |> upsert_tag(attrs)
+    |> Tag.submit_changeset(attrs)
+    |> Repo.insert_or_update()
+    |> upload_photos(attrs)
     |> notify_admins()
   end
 

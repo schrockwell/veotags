@@ -36,7 +36,7 @@ defmodule Veotags.Release do
   def seed_from_reddit do
     tags_params = [
       %{
-        comment: "634 Franklin Ave, Hartford, CT",
+        title: "634 Franklin Ave, Hartford, CT",
         latitude: 41.7309577,
         longitude: -72.674264,
         photo: "https://i.redd.it/zacuftbmgiaf1.jpeg",
@@ -45,7 +45,7 @@ defmodule Veotags.Release do
         accuracy: "exact"
       },
       %{
-        comment: "Toledo, Ohio",
+        title: "Toledo, Ohio",
         latitude: 41.5434109,
         longitude: -83.5895818,
         photo: "https://i.redd.it/4stbqf8b3daf1.jpeg",
@@ -55,7 +55,7 @@ defmodule Veotags.Release do
         accuracy: "approximate"
       },
       %{
-        comment: "Oakwood Ave & Park Rd, West Hartford, CT",
+        title: "Oakwood Ave & Park Rd, West Hartford, CT",
         latitude: 41.7578489,
         longitude: -72.7225853,
         photo: "https://i.redd.it/8d68wto5kx9f1.jpeg",
@@ -65,7 +65,7 @@ defmodule Veotags.Release do
         accuracy: "exact"
       },
       %{
-        comment: "Brewster, NY Rest Area",
+        title: "Brewster, NY Rest Area",
         latitude: 41.3620114,
         longitude: -73.630862,
         photo: "https://i.redd.it/1qt18q98h4te1.jpeg",
@@ -74,7 +74,7 @@ defmodule Veotags.Release do
         accuracy: "exact"
       },
       %{
-        comment: "Mohegan Sun parking garage",
+        title: "Mohegan Sun parking garage",
         latitude: 41.4918012,
         longitude: -72.0929669,
         photo: "https://i.redd.it/nv3qyknovite1.jpeg",
@@ -83,7 +83,7 @@ defmodule Veotags.Release do
         accuracy: "approximate"
       },
       %{
-        comment: "Vieques, PR",
+        title: "Vieques, PR",
         latitude: 18.1215945,
         longitude: -65.5054732,
         photo: "https://i.redd.it/ys5it94fblge1.jpeg",
@@ -92,7 +92,7 @@ defmodule Veotags.Release do
         accuracy: "approximate"
       },
       %{
-        comment: "Hartford Medical Society",
+        title: "Hartford Medical Society",
         latitude: 41.7836564,
         longitude: -72.7109136,
         photo: "https://i.redd.it/l904tiwgftee1.jpg",
@@ -218,7 +218,7 @@ defmodule Veotags.Release do
         source_url: "https://www.reddit.com/r/veotags/comments/170ka8i/snack_bar_in_boston/",
         latitude: 42.3588785,
         longitude: -71.0504673,
-        comment: "Central Snack Bar",
+        title: "Central Snack Bar",
         accuracy: "exact",
         reporter: "u/TerminusBandit"
       },
@@ -228,7 +228,7 @@ defmodule Veotags.Release do
           "https://www.reddit.com/r/veotags/comments/15wmu6f/center_framing_and_art_west_hartford/",
         latitude: 41.7617958,
         longitude: -72.7434618,
-        comment: "Central Framing & Art",
+        title: "Central Framing & Art",
         accuracy: "exact",
         reporter: "u/schrockwell"
       },
@@ -238,7 +238,7 @@ defmodule Veotags.Release do
           "https://www.reddit.com/r/Connecticut/comments/15qhhof/paused_my_movie_for_this/",
         latitude: 30.0525472,
         longitude: -89.9362459,
-        comment: "From the Netflix documentary 'Closed For Storm'",
+        title: "From the Netflix documentary 'Closed For Storm'",
         accuracy: "approximate",
         reporter: "u/HarryMcButtcheeks"
       },
@@ -248,7 +248,7 @@ defmodule Veotags.Release do
           "https://www.reddit.com/r/Connecticut/comments/122r02o/visiting_some_family_in_san_juan_cant_get_away/",
         latitude: 18.4106574,
         longitude: -66.094542,
-        comment: "San Juan",
+        title: "San Juan",
         accuracy: "approximate",
         reporter: "u/Fullcabflip"
       },
@@ -258,7 +258,7 @@ defmodule Veotags.Release do
           "https://www.reddit.com/r/veotags/comments/12a8k9i/mens_room_wendys_manchester_ct/",
         latitude: 41.79964,
         longitude: -72.5508506,
-        comment: "Wendy's bathroom, Manchester",
+        title: "Wendy's bathroom, Manchester",
         accuracy: "exact",
         reporter: "u/schrockwell"
       },
@@ -275,7 +275,7 @@ defmodule Veotags.Release do
           "https://www.reddit.com/r/veotags/comments/pvjcro/noble_gas_and_convenience_new_britain_ct/",
         latitude: 41.6725279,
         longitude: -72.755775,
-        comment: "Noble Gas, New Britain",
+        title: "Noble Gas, New Britain",
         accuracy: "exact",
         reporter: "u/schrockwell"
       }

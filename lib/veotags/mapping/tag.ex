@@ -14,6 +14,7 @@ defmodule Veotags.Mapping.Tag do
     field :photo, Veotags.Photo.Type
     field :latitude, :float
     field :longitude, :float
+    field :title, :string
     field :comment, :string
     field :email, :string
     field :reporter, :string
@@ -43,6 +44,7 @@ defmodule Veotags.Mapping.Tag do
       :longitude,
       :accuracy,
       :email,
+      :title,
       :comment,
       :reporter,
       :source_url,
@@ -52,7 +54,8 @@ defmodule Veotags.Mapping.Tag do
     |> validate_location()
     |> validate_email()
     |> validate_length(:email, max: 1000)
-    |> validate_length(:comment, max: 100)
+    |> validate_length(:comment, max: 200)
+    |> validate_length(:title, max: 200)
   end
 
   def attach_photo_changeset(changeset, attrs) do

@@ -116,6 +116,10 @@ defmodule VeotagsWeb.MapLive.Show do
                   </span>
                 </td>
               </tr>
+              <tr :if={@tag.comment}>
+                <th>Comment</th>
+                <td>{@tag.comment}</td>
+              </tr>
               <tr>
                 <th>Location</th>
                 <td :if={Tag.mappable?(@tag)}>

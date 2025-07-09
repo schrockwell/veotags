@@ -30,7 +30,8 @@ defmodule VeotagsWeb.TagLive.Form do
 
           <.input field={@form[:reporter]} type="text" label="Reporter" />
           <.input field={@form[:email]} type="text" label="Email" maxlength="1000" />
-          <.input field={@form[:comment]} type="text" label="Comment" maxlength="100" />
+          <.input field={@form[:comment]} type="text" label="Comment" maxlength="200" />
+          <.input field={@form[:title]} type="text" label="Title" maxlength="200" />
 
           <footer>
             <%= if @tag.approved_at do %>

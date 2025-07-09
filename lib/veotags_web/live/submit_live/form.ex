@@ -78,8 +78,8 @@ defmodule VeotagsWeb.SubmitLive.Form do
               type="text"
               label="Comment"
               placeholder="Optional"
-              hint="Describe the location of this tag (100 characters max)."
-              maxlength="100"
+              hint="Describe the location of this tag (200 characters max)."
+              maxlength="200"
             />
 
             <.input

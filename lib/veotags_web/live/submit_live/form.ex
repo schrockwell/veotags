@@ -234,5 +234,8 @@ defmodule VeotagsWeb.SubmitLive.Form do
     else
       _ -> %{}
     end
+  rescue
+    # Exexif can raise - see this issue: https://github.com/pragdave/exexif/issues/14
+    _ -> %{}
   end
 end

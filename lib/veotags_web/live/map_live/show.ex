@@ -106,14 +106,17 @@ defmodule VeotagsWeb.MapLive.Show do
           <table class="table">
             <tbody>
               <tr>
-                <th>Source</th>
+                <th>Source{if length(tag_reporter_names(@tag)) != 1, do: "s"}</th>
                 <td>
-                  {@tag.reporter || "Anonymous"}
-                  <span :if={@tag.source_url}>
+                  <div :for={name <- tag_reporter_names(@tag)}>
+                    {name}
+                  </div>
+
+                  <div :if={@tag.source_url}>
                     <.link href={@tag.source_url} target="_blank" class="link link-primary">
-                      ({URI.parse(@tag.source_url).host})
+                      {URI.parse(@tag.source_url).host}
                     </.link>
-                  </span>
+                  </div>
                 </td>
               </tr>
               <tr :if={@tag.comment}>

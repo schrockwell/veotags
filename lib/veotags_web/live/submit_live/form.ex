@@ -82,22 +82,24 @@ defmodule VeotagsWeb.SubmitLive.Form do
               maxlength="200"
             />
 
-            <.input
-              field={@form[:reporter]}
-              type="text"
-              label="Reported By"
-              placeholder="Anonymous"
-              hint="Provide your name or online handle if you want credit for submitting this photo."
-            />
+            <.inputs_for :let={f_reporter} field={@form[:reporters]}>
+              <.input
+                field={f_reporter[:name]}
+                type="text"
+                label="Reported By"
+                placeholder="Anonymous"
+                hint="Provide your name or online handle if you want credit for submitting this photo."
+              />
 
-            <.input
-              field={@form[:email]}
-              type="text"
-              label="E-mail"
-              placeholder="Optional"
-              hint="Your e-mail will never be published or subscribed to anything. It's only used to to contact you
-                about the details of this listing."
-            />
+              <.input
+                field={f_reporter[:email]}
+                type="text"
+                label="E-mail"
+                placeholder="Optional"
+                hint="Your e-mail will never be published or subscribed to anything. It's only used to to contact you
+                  about the details of this listing."
+              />
+            </.inputs_for>
 
             <footer>
               <.button phx-disable-with="Submitting..." variant="primary">Submit</.button>
@@ -111,12 +113,14 @@ defmodule VeotagsWeb.SubmitLive.Form do
 
   @impl true
   def mount(_params, _session, socket) do
+    new_tag = %Tag{}
+
     {:ok,
      socket
      |> assign(:page_title, "Submit")
      |> assign(:step, 1)
-     |> assign(:tag, %Tag{})
-     |> assign(:form, to_form(Mapping.change_tag(%Tag{})))
+     |> assign(:tag, new_tag)
+     |> assign(:form, to_form(Mapping.change_tag(new_tag)))
      |> allow_upload(:photo, accept: Veotags.Photo.allowed_extensions())}
   end
 

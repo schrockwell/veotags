@@ -2,8 +2,10 @@ export default {
   mounted() {
     const identity = this.getIdentity();
 
-    ["reporter", "email"].forEach((field) => {
-      const input = this.el.querySelector(`input[name='tag[${field}]']`);
+    ["name", "email"].forEach((field) => {
+      const input = this.el.querySelector(
+        `input[name='tag[reporters][0][${field}]']`
+      );
 
       if (input) {
         input.value = identity[field] || "";

@@ -28,8 +28,11 @@ defmodule VeotagsWeb.TagLive.Form do
             disabled={@form[:accuracy].value == "unknown"}
           />
 
-          <.input field={@form[:reporter]} type="text" label="Reporter" />
-          <.input field={@form[:email]} type="text" label="Email" maxlength="1000" />
+          <.inputs_for :let={f_reporter} field={@form[:reporters]}>
+            <.input field={f_reporter[:name]} type="text" label="Reporter" />
+            <.input field={f_reporter[:email]} type="text" label="Email" maxlength="1000" />
+          </.inputs_for>
+
           <.input field={@form[:comment]} type="text" label="Comment" maxlength="200" />
           <.input field={@form[:title]} type="text" label="Title" maxlength="200" />
 

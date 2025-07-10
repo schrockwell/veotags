@@ -16,12 +16,12 @@ defmodule Veotags.Mapping.Tag do
     field :longitude, :float
     field :title, :string
     field :comment, :string
-    field :email, :string
-    field :reporter, :string
     field :source_url, :string
     field :submitted_at, :utc_datetime
     field :approved_at, :utc_datetime
     field :accuracy, :string, default: "approximate"
+
+    embeds_many :reporters, Veotags.Mapping.Reporter, on_replace: :delete
 
     timestamps(type: :utc_datetime)
   end
@@ -43,17 +43,14 @@ defmodule Veotags.Mapping.Tag do
       :latitude,
       :longitude,
       :accuracy,
-      :email,
       :title,
       :comment,
-      :reporter,
       :source_url,
       :submitted_at
     ])
+    |> cast_embed(:reporters)
     |> put_submitted_at()
     |> validate_location()
-    |> validate_email()
-    |> validate_length(:email, max: 1000)
     |> validate_length(:comment, max: 200)
     |> validate_length(:title, max: 200)
   end
@@ -97,14 +94,6 @@ defmodule Veotags.Mapping.Tag do
       |> validate_required([:latitude, :longitude])
       |> validate_number(:latitude, greater_than: -90, less_than: 90)
       |> validate_number(:longitude, greater_than: -180, less_than: 180)
-    end
-  end
-
-  defp validate_email(changeset) do
-    if get_field(changeset, :email) do
-      validate_format(changeset, :email, ~r/@/)
-    else
-      changeset
     end
   end
 

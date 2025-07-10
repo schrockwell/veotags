@@ -63,7 +63,7 @@ defmodule Veotags.Mapping do
   def get_tag_by!(clauses), do: Repo.get_by!(Tag, clauses)
 
   def create_initial_tag(attrs) do
-    %Tag{}
+    %Tag{reporters: [%Veotags.Mapping.Reporter{}]}
     |> Tag.initial_changeset(attrs)
     |> Repo.insert()
     |> upload_photos(attrs)

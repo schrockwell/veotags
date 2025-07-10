@@ -25,7 +25,6 @@ defmodule VeotagsWeb.TagLive.Index do
             />
           </:col>
           <:col :let={tag} label="Submitted">{date(tag.submitted_at)}</:col>
-          <:col :let={tag} label="Reporter">{tag.reporter || "-"}</:col>
         </.table>
       </.container>
     </Layouts.app>

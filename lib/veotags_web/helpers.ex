@@ -12,4 +12,14 @@ defmodule VeotagsWeb.Helpers do
   def photo_url(%Tag{} = tag, version \\ :px2000) do
     Photo.url({tag.photo, tag}, version, [])
   end
+
+  def tag_reporter_names(%Tag{reporters: reporters}) do
+    reporters
+    |> Enum.map(& &1.name)
+    |> Enum.reject(&is_nil/1)
+    |> case do
+      [] -> ["Anonymous"]
+      names -> names
+    end
+  end
 end

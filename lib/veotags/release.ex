@@ -40,7 +40,7 @@ defmodule Veotags.Release do
         latitude: 41.7309577,
         longitude: -72.674264,
         photo: "https://i.redd.it/zacuftbmgiaf1.jpeg",
-        reporter: "u/Immoracle",
+        reporters: [%{name: "u/Immoracle"}],
         source_url: "https://www.reddit.com/r/veotags/comments/1lq4oda/veo_hartford/",
         accuracy: "exact"
       },
@@ -49,7 +49,7 @@ defmodule Veotags.Release do
         latitude: 41.5434109,
         longitude: -83.5895818,
         photo: "https://i.redd.it/4stbqf8b3daf1.jpeg",
-        reporter: "u/FlightOfBrian",
+        reporters: [%{name: "u/FlightOfBrian"}],
         source_url:
           "https://www.reddit.com/r/veotags/comments/1lpizqs/spotted_in_central_ohio_in_2021/",
         accuracy: "approximate"
@@ -59,7 +59,7 @@ defmodule Veotags.Release do
         latitude: 41.7578489,
         longitude: -72.7225853,
         photo: "https://i.redd.it/8d68wto5kx9f1.jpeg",
-        reporter: "u/Alkali13",
+        reporters: [%{name: "u/Alkali13"}],
         source_url:
           "https://www.reddit.com/r/veotags/comments/1lnpfs7/corner_of_oakwood_and_park_in_weha_ct/",
         accuracy: "exact"
@@ -69,7 +69,7 @@ defmodule Veotags.Release do
         latitude: 41.3620114,
         longitude: -73.630862,
         photo: "https://i.redd.it/1qt18q98h4te1.jpeg",
-        reporter: "u/schrockwell",
+        reporters: [%{name: "u/schrockwell"}],
         source_url: "https://www.reddit.com/r/veotags/comments/1lq4oda/veo_hartford/",
         accuracy: "exact"
       },
@@ -102,115 +102,115 @@ defmodule Veotags.Release do
       %{
         photo: "https://i.redd.it/smuzu0gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/nbm8j0gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/ov1841gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/ga8qe0gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/yv0ra0gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/zh4nz1gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/23usr4gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/i9quh7gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/x1zui1gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/akivk1gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/burl12gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/htnrc1gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/iu7s87gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/xc6gy1gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/g8i719gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/vk2e83gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/gcqdw7gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/3zebl8gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
         photo: "https://i.redd.it/2pr8y4gr20ee1.jpg",
         source_url: "https://www.reddit.com/r/veotags/comments/1i56cm0/veo/",
-        reporter: "u/PorkIsAVerySweetMeat",
+        reporters: [%{name: "u/PorkIsAVerySweetMeat"}],
         accuracy: "unknown"
       },
       %{
@@ -220,7 +220,7 @@ defmodule Veotags.Release do
         longitude: -71.0504673,
         title: "Central Snack Bar",
         accuracy: "exact",
-        reporter: "u/TerminusBandit"
+        reporters: [%{name: "u/TerminusBandit"}]
       },
       %{
         photo: "https://i.redd.it/jn8wh6fhxbjb1.jpg",
@@ -230,7 +230,7 @@ defmodule Veotags.Release do
         longitude: -72.7434618,
         title: "Central Framing & Art",
         accuracy: "exact",
-        reporter: "u/schrockwell"
+        reporters: [%{name: "u/schrockwell"}]
       },
       %{
         photo: "https://i.redd.it/czwcuwxfjzhb1.jpg",
@@ -240,7 +240,7 @@ defmodule Veotags.Release do
         longitude: -89.9362459,
         title: "From the Netflix documentary 'Closed For Storm'",
         accuracy: "approximate",
-        reporter: "u/HarryMcButtcheeks"
+        reporters: [%{name: "u/HarryMcButtcheeks"}]
       },
       %{
         photo: "https://i.imgur.com/PRcELn3.jpg",
@@ -250,7 +250,7 @@ defmodule Veotags.Release do
         longitude: -66.094542,
         title: "San Juan",
         accuracy: "approximate",
-        reporter: "u/Fullcabflip"
+        reporters: [%{name: "u/Fullcabflip"}]
       },
       %{
         photo: "https://i.imgur.com/KSPBjO8.jpg",
@@ -260,13 +260,13 @@ defmodule Veotags.Release do
         longitude: -72.5508506,
         title: "Wendy's bathroom, Manchester",
         accuracy: "exact",
-        reporter: "u/schrockwell"
+        reporters: [%{name: "u/schrockwell"}]
       },
       %{
         photo: "https://i.redd.it/78artmhlrrqa1.jpg",
         source_url:
           "https://www.reddit.com/r/veotags/comments/125xtsm/cant_escape_veo_even_at_home/",
-        reporter: "u/LizzieBordensPetRock",
+        reporters: [%{name: "u/LizzieBordensPetRock"}],
         accuracy: "unknown"
       },
       %{
@@ -277,7 +277,7 @@ defmodule Veotags.Release do
         longitude: -72.755775,
         title: "Noble Gas, New Britain",
         accuracy: "exact",
-        reporter: "u/schrockwell"
+        reporters: [%{name: "u/schrockwell"}]
       }
     ]
 

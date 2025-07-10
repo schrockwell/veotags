@@ -59,11 +59,11 @@ defmodule Veotags.Photo do
 
   # Define a thumbnail transformation:
   def transform(:px2000, _) do
-    {:convert, "-resize 2000x2000^ -format jpeg", :jpg}
+    {:convert, "-resize 2000x2000^> -format jpeg", :jpg}
   end
 
   def transform(:px500, _) do
-    {:convert, "-resize 500x500^ -sharpen 0x1 -format jpeg", :jpg}
+    {:convert, "-resize 500x500^> -sharpen 0x1 -format jpeg", :jpg}
   end
 
   # Override the persisted filenames:

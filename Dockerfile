@@ -72,8 +72,14 @@ RUN mix release
 FROM ${RUNNER_IMAGE} AS final
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends libstdc++6 openssl libncurses5 locales ca-certificates imagemagick \
+  && apt-get install -y --no-install-recommends libstdc++6 openssl libncurses5 locales ca-certificates imagemagick wget \
   && rm -rf /var/lib/apt/lists/*
+
+# Install sse for secret management
+ENV SSE_VERSION=0.1.2
+RUN wget "https://github.com/schrockwell/sse/releases/download/v${SSE_VERSION}/sse-linux-amd64.tar.gz" -O /tmp/sse.tar.gz && \
+  tar -xzf /tmp/sse.tar.gz -C /usr/local/bin/ && \
+  rm /tmp/sse.tar.gz
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
@@ -84,6 +90,7 @@ ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
 WORKDIR "/app"
+COPY env.toml ./
 RUN chown nobody /app
 
 # set runner ENV

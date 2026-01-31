@@ -3,6 +3,8 @@
 
 echo "Starting Docker entrypoint script..."
 
+eval "$(sse load production)"
+
 # If running the server, run migrations first
 if [ "$#" -eq 1 ] && [ "$1" = "/app/bin/server" ]; then
   echo "Running migrations before starting server..."

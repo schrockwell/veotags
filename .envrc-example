@@ -1,7 +1,0 @@
-export ADMIN_PASSWORD="password"
-export AWS_ACCESS_KEY_ID="DO..."
-export AWS_HOST="nyc3.digitaloceanspaces.com"
-export AWS_REGION="nyc3"
-export AWS_SECRET_ACCESS_KEY="..."
-export GEOCODING_API_KEY="..."
-export S3_BUCKET="veotags-dev"
